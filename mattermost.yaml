@@ -4,8 +4,8 @@ message: |-
   The following service(s) have been created in your project: ${APPLICATION_NAME}.
 
   Mattermost Version: ${MATTERMOST_VERSION}
-       Database User: from secret `mattermost`
-            Password: from secret `mattermost`
+       Database User: from secret `mattermost-database`
+            Password: from secret `mattermost-database`
        Database Name: ${POSTGRESQL_DATABASE}
 metadata:
   name: mattermost
@@ -20,10 +20,10 @@ metadata:
     openshift.io/display-name: Mattermost
     tags: mattermost
     iconClass: fa fa-comments
-    template.openshift.io/documentation-url: https://github.com/tschwaerzl/mattermost-openshift/blob/master/README.md
+    template.openshift.io/documentation-url: https://github.com/duke253/mattermost-openshift-customized/blob/main/README.md
     template.openshift.io/long-description: This template provides a Mattermost service, it depends on a Secret and PostgreSQL.
     template.openshift.io/provider-display-name: Mattermost Community
-    template.openshift.io/support-url: https://github.com/tschwaerzl/mattermost-openshift/issues
+    template.openshift.io/support-url: https://github.com/duke253/mattermost-openshift-customized/issues
 
 objects:
 - kind: PersistentVolumeClaim
@@ -44,13 +44,13 @@ objects:
     tags:  
     - name: '${MATTERMOST_VERSION}'
       annotations:
-        description: The Mattermost image from docker.io/tschwaerzl/mattermost-openshift
+        description: The Mattermost image from docker.io/duke253/mattermost-team-edition
         openshift.io/display-name: 'Mattermost ${MATTERMOST_VERSION}'
         tags: mattermost
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'docker.io/tschwaerzl/mattermost-openshift:${MATTERMOST_VERSION}'
+        name: 'docker.io/duke253/mattermost-team-edition:2.0'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -172,7 +172,7 @@ objects:
     name: mattermost
   data:
     db_database: '${POSTGRESQL_DATABASE}'
-    db_host: postgresql.mattermost.svc
+    db_host: 178.154.233.162
     db_port: '5432'
 parameters:
 - name: APPLICATION_NAME
@@ -188,4 +188,4 @@ parameters:
   displayName: PostgreSQL Database Name
   name: POSTGRESQL_DATABASE
   required: true
-  value: mattermost
+  value: mattermostdb
