@@ -58,7 +58,7 @@ objects:
   spec:
     selector:
       name: '${APPLICATION_NAME}'
-    replicas: 2
+    replicas: 1
     securityContext: {}
     serviceAccount: mattermost
     serviceAccountName: mattermost
