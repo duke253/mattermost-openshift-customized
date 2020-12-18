@@ -41,6 +41,8 @@ RUN mkdir -p /opt && \
 COPY config.json /opt/mattermost/config/config.json
 
 COPY mattermost-launch.sh /opt/mattermost/bin/mattermost-launch.sh
+RUN chmod +x /opt/mattermost/bin/mattermost-launch.sh
+ENTRYPOINT [ "/opt/mattermost/bin/mattermost-launch.sh" ]
 
 RUN chmod 777 /opt/mattermost/config/config.json && \
     mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins && \
