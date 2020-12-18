@@ -4,8 +4,8 @@ message: |-
   The following service(s) have been created in your project: ${APPLICATION_NAME}.
 
   Mattermost Version: ${MATTERMOST_VERSION}
-       Database User: from secret `mattermost-database`
-            Password: from secret `mattermost-database`
+       Database User: from secret `mattermost`
+            Password: from secret `mattermost`
        Database Name: ${POSTGRESQL_DATABASE}
 metadata:
   name: mattermost
