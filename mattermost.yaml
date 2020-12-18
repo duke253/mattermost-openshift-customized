@@ -188,4 +188,4 @@ parameters:
   displayName: PostgreSQL Database Name
   name: POSTGRESQL_DATABASE
   required: true
-  value: mattermostdb
+  value: mattermostdb02
