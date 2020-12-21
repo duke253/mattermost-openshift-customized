@@ -46,9 +46,7 @@ COPY mattermost-launch.sh /opt/mattermost/bin/mattermost-launch.sh
 RUN chmod +x /opt/mattermost/bin/mattermost-launch.sh
 ENTRYPOINT [ "/opt/mattermost/bin/mattermost-launch.sh" ]
 
-RUN chmod 777 /opt/mattermost/config/config.json && \
-    mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins && \
-    chmod 777 /opt/mattermost/logs/ /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
+RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
 RUN addgroup -g ${PGID} mattermost \
     && adduser -D -u ${PUID} -G mattermost -h /opt/mattermost -D mattermost \
