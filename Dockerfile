@@ -26,10 +26,12 @@ RUN apk add --no-cache \
 	jq \
 	libc6-compat \
 	libffi-dev \
+	libcap \
 	linux-headers \
 	mailcap \
 	netcat-openbsd \
 	xmlsec-dev \
+	tzdata \
 	&& rm -rf /tmp/*
 
 RUN mkdir -p /opt && \
