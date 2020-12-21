@@ -50,7 +50,7 @@ objects:
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'docker.io/duke253/mattermost-team-edition:2.0'
+        name: 'docker.io/duke253/mattermost-team-edition:2.1'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
