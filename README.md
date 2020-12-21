@@ -14,7 +14,7 @@ oc secrets link mattermost mattermost-database
 oc adm policy add-scc-to-user anyuid system:serviceaccount:mattermost:mattermost
 oc annotate namespace mattermost openshift.io/sa.scc.uid-range=2000/2000 --overwrite
 
-#create template
+# create template
 oc create --filename mattermost.yaml
 
 # deploy new app from template
