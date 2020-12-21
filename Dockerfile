@@ -49,7 +49,9 @@ RUN chmod 777 /opt/mattermost/config/config.json && \
     chmod 777 /opt/mattermost/logs/ /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
 RUN addgroup -g ${PGID} mattermost \
-    && adduser -D -u ${PUID} -G mattermost -h /opt/mattermost -D mattermost
+    && adduser -D -u ${PUID} -G mattermost -h /opt/mattermost -D mattermost \
+	&& chown -R mattermost:mattermost /opt/mattermost \
+	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
 USER 2000
 
