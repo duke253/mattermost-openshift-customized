@@ -50,7 +50,7 @@ objects:
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'docker.io/duke253/mattermost-team-edition:2.1'
+        name: 'docker.io/duke253/mattermost-team-edition:2.2'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -58,7 +58,7 @@ objects:
   spec:
     selector:
       name: '${APPLICATION_NAME}'
-    replicas: 1
+    replicas: 2
     securityContext: {}
     serviceAccount: mattermost
     serviceAccountName: mattermost
