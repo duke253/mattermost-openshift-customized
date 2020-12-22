@@ -40,8 +40,8 @@ ENTRYPOINT [ "/opt/mattermost/bin/mattermost-launch.sh" ]
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
-RUN addgroup -g ${PGID} mattermost \
-    && adduser -D -u ${PUID} -G mattermost -h /opt/mattermost -D mattermost \
+RUN groupadd -g ${PGID} mattermost \
+    && useradd -D -u ${PUID} -G mattermost -h /opt/mattermost -D mattermost \
 	&& chown -R mattermost:mattermost /opt/mattermost \
 	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
