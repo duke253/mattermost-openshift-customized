@@ -44,13 +44,13 @@ objects:
     tags:  
     - name: '${MATTERMOST_VERSION}'
       annotations:
-        description: The Mattermost image from docker.io/duke253/mattermost-team-edition
+        description: The Mattermost image from quay.io/duke253/mattermost-openshift-customized
         openshift.io/display-name: 'Mattermost ${MATTERMOST_VERSION}'
         tags: mattermost
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'docker.io/duke253/mattermost-team-edition:2.2'
+        name: 'quay.io/duke253/mattermost-openshift-customized:1.0'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
