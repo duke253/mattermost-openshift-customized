@@ -1,6 +1,5 @@
-FROM alpine:3.12.1
+FROM ubi7/ubi:latest
 
-ENV container docker
 ENV MATTERMOST_VERSION 5.29.0
 ENV MATTERMOST_VERSION_SHORT 5290
 ARG PUID=2000
@@ -8,7 +7,7 @@ ARG PGID=2000
 
 # Labels consumed by Red Hat build service
 LABEL Component="mattermost" \
-      name="alpine/mattermost-${MATTERMOST_VERSION_SHORT}-alpine312" \
+      name="alpine/mattermost-${MATTERMOST_VERSION_SHORT}-ubi7" \
       vendor=Community \
       Version="${MATTERMOST_VERSION}" \
       Release="1"
@@ -20,22 +19,15 @@ LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-altern
       io.openshift.tags="mattermost,slack"
 
 # Install some needed packages
-RUN apk add --no-cache \
-	ca-certificates \
-	curl \
-	jq \
-	libc6-compat \
-	libffi-dev \
-	libcap \
-	linux-headers \
-	mailcap \
-	netcat-openbsd \
-	xmlsec-dev \
-	tzdata \
-	&& rm -rf /tmp/*
+RUN yum -y install yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
+	yum -y install jq &&\
+	yum -y install kernel-headers &&\
+	yum -y install mailcap &&\
+	yum -y install nmap-ncat &&\
+	yum -y install xmlsec1 &&\
+	yum clean all -y
 
-RUN mkdir -p /opt && \
-    cd /opt && \
+RUN cd /opt && \
     curl -LO -v https://releases.mattermost.com/${MATTERMOST_VERSION}/mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
