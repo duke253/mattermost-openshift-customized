@@ -41,7 +41,7 @@ ENTRYPOINT [ "/opt/mattermost/bin/mattermost-launch.sh" ]
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
 RUN groupadd -g ${PGID} mattermost \
-    && useradd -u ${PUID} -G mattermost -h /opt/mattermost mattermost \
+    && useradd -u ${PUID} -g mattermost -b /opt mattermost \
 	&& chown -R mattermost:mattermost /opt/mattermost \
 	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
