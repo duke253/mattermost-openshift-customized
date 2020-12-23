@@ -108,18 +108,6 @@ parameters:
     description: The name for the application.
     value: keycloak
     required: true
-  - name: KEYCLOAK_USER
-    displayName: Keycloak Administrator Username
-    description: Keycloak Server administrator username
-    generate: expression
-    from: '[a-zA-Z0-9]{8}'
-    required: true
-  - name: KEYCLOAK_PASSWORD
-    displayName: Keycloak Administrator Password
-    description: Keycloak Server administrator password
-    generate: expression
-    from: '[a-zA-Z0-9]{8}'
-    required: true
   - name: DB_VENDOR
     displayName: DB Vendor
     description: 'DB vendor (H2, POSTGRES, MYSQL or MARIADB)'
