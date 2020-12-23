@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: keycloak
+  name: keycloak-temp
   namespace: openshift-config
   annotations:
     description: An example Keycloak server with HTTPS
