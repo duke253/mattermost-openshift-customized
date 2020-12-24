@@ -96,9 +96,15 @@ objects:
         containers:
         - env:
           - name: KEYCLOAK_USER
-            value: ${KEYCLOAK_USER}
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: keycloak-secret
           - name: KEYCLOAK_PASSWORD
-            value: ${KEYCLOAK_PASSWORD}
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: keycloak-secret
           - name: DB_VENDOR
             value: ${DB_VENDOR}
           - name: JGROUPS_DISCOVERY_PROTOCOL
@@ -108,9 +114,15 @@ objects:
           - name: DB_ADDR
             value: ${DB_ADDR}
           - name: DB_USER
-            value: ${DB_USER}
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: keycloak-database
           - name: DB_PASSWORD
-            value: ${DB_PASSWORD}
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: keycloak-database
           - name: DB_DATABASE
             value: ${DB_DATABASE}
           image: quay.io/keycloak/keycloak:latest
@@ -145,30 +157,6 @@ parameters:
   name: APPLICATION_NAME
   required: true
   value: keycloak
-- description: Keycloak Server administrator username
-  displayName: Keycloak Administrator Username
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: KEYCLOAK_USER
-  required: true
-- description: Keycloak Server administrator password
-  displayName: Keycloak Administrator Password
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: KEYCLOAK_PASSWORD
-  required: true
-- description: Keycloak DB username
-  displayName: Keycloak DB Username
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: DB_USER
-  required: true
-- description: Keycloak DB password
-  displayName: Keycloak DB Password
-  from: '[a-zA-Z0-9]{8}'
-  generate: expression
-  name: DB_PASSWORD
-  required: true
 - description: DB vendor (H2, POSTGRES, MYSQL or MARIADB)
   displayName: DB Vendor
   name: DB_VENDOR
