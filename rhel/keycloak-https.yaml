@@ -1,0 +1,183 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  annotations:
+    description: Keycloak server with HTTPS
+    iconClass: icon-sso
+    openshift.io/display-name: Keycloak
+    tags: keycloak
+    version: 4.0.0.Beta2
+  creationTimestamp: "2020-12-24T10:53:26Z"
+  name: keycloak-https
+  namespace: mattermost-008
+  resourceVersion: "3106007"
+  selfLink: /apis/template.openshift.io/v1/namespaces/mattermost-008/templates/keycloak-https
+  uid: 82138f17-ef7a-44c4-8f9f-de6810a411bc
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The web server's http port.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The web server's https port.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: secure-${APPLICATION_NAME}
+  spec:
+    ports:
+    - port: 8443
+      targetPort: 8443
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}
+- apiVersion: v1
+  id: ${APPLICATION_NAME}-http
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for application's http service.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    host: ${HOSTNAME_HTTP}
+    to:
+      name: ${APPLICATION_NAME}
+- apiVersion: v1
+  id: ${APPLICATION_NAME}-https
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for application's https service.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: secure-${APPLICATION_NAME}
+  spec:
+    host: ${HOSTNAME_HTTPS}
+    tls:
+      termination: passthrough
+    to:
+      name: secure-${APPLICATION_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          application: ${APPLICATION_NAME}
+          deploymentConfig: ${APPLICATION_NAME}
+        name: ${APPLICATION_NAME}
+      spec:
+        containers:
+        - env:
+          - name: KEYCLOAK_USER
+            value: ${KEYCLOAK_USER}
+          - name: KEYCLOAK_PASSWORD
+            value: ${KEYCLOAK_PASSWORD}
+          - name: DB_VENDOR
+            value: ${DB_VENDOR}
+          - name: JGROUPS_DISCOVERY_PROTOCOL
+            value: dns.DNS_PING
+          - name: JGROUPS_DISCOVERY_PROPERTIES
+            value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
+          image: quay.io/keycloak/keycloak:latest
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /auth/realms/master
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+          name: ${APPLICATION_NAME}
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: /auth/realms/master
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+          securityContext:
+            privileged: false
+    triggers:
+    - type: ConfigChange
+parameters:
+- description: The name for the application.
+  displayName: Application Name
+  name: APPLICATION_NAME
+  required: true
+  value: keycloak
+- description: Keycloak Server administrator username
+  displayName: Keycloak Administrator Username
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: KEYCLOAK_USER
+  required: true
+- description: Keycloak Server administrator password
+  displayName: Keycloak Administrator Password
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: KEYCLOAK_PASSWORD
+  required: true
+- description: Keycloak DB username
+  displayName: Keycloak DB Username
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: DB_USER
+  required: true
+- description: Keycloak DB password
+  displayName: Keycloak DB Password
+  from: '[a-zA-Z0-9]{8}'
+  generate: expression
+  name: DB_PASSWORD
+  required: true
+- description: DB vendor (H2, POSTGRES, MYSQL or MARIADB)
+  displayName: DB Vendor
+  name: DB_VENDOR
+  required: true
+  value: POSTGRES
+- description: DB host address
+  displayName: DB Host Address
+  name: DB_ADDR
+  required: true
+  value: 178.154.233.162
+- description: 'Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>'
+  displayName: Custom http Route Hostname
+  name: HOSTNAME_HTTP
+- description: 'Custom hostname for https service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>'
+  displayName: Custom https Route Hostname
+  name: HOSTNAME_HTTPS
+- description: This namespace is a part of DNS query sent to Kubernetes API. This query allows the DNS_PING protocol to extract cluster members. This parameter might be removed once https://issues.jboss.org/browse/JGRP-2292 is implemented.
+  displayName: Namespace used for DNS discovery
+  name: NAMESPACE
+  required: true
