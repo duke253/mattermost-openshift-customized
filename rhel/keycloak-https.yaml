@@ -172,7 +172,7 @@ parameters:
   displayName: DB Host Address
   name: DB_ADDR
   required: true
-  value: mmpostgresqldb.piewitheye.com
+  value: 178.154.233.162
 - description: 'Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>'
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
