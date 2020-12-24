@@ -120,7 +120,7 @@ objects:
               path: /auth/realms/master
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 60
+            initialDelaySeconds: 240
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 8080
@@ -134,7 +134,7 @@ objects:
               path: /auth/realms/master
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
           securityContext:
             privileged: false
     triggers:
