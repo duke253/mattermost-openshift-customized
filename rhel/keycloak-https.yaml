@@ -107,6 +107,10 @@ objects:
             value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
           - name: DB_ADDR
             value: ${DB_ADDR}
+          - name: DB_USER
+            value: ${DB_USER}
+          - name: DB_PASSWORD
+            value: ${DB_PASSWORD}
           image: quay.io/keycloak/keycloak:latest
           livenessProbe:
             failureThreshold: 3
