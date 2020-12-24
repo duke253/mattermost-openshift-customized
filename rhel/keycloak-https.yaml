@@ -111,6 +111,8 @@ objects:
             value: ${DB_USER}
           - name: DB_PASSWORD
             value: ${DB_PASSWORD}
+          - name: DB_DATABASE
+            value: ${DB_DATABASE}
           image: quay.io/keycloak/keycloak:latest
           livenessProbe:
             failureThreshold: 3
@@ -177,6 +179,11 @@ parameters:
   name: DB_ADDR
   required: true
   value: 178.154.233.162
+- description: DB name
+  displayName: DB Name
+  name: DB_DATABASE
+  required: true
+  value: keycloakdb
 - description: 'Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>'
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
