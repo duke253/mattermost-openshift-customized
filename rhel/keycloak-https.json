@@ -8,7 +8,7 @@
             "tags": "keycloak",
             "version": "4.0.0.Beta2",
             "openshift.io/display-name": "Keycloak",
-            "description": "An example Keycloak server with HTTPS"
+            "description": "Keycloak server with HTTPS"
         }
     },
     "parameters": [
@@ -35,11 +35,34 @@
             "generate": "expression",
             "required": true
         },
+		{
+            "displayName": "Keycloak DB Username",
+            "description": "Keycloak DB username",
+            "name": "DB_USER",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
+        {
+            "displayName": "Keycloak DB Password",
+            "description": "Keycloak DB password",
+            "name": "DB_PASSWORD",
+            "from": "[a-zA-Z0-9]{8}",
+            "generate": "expression",
+            "required": true
+        },
         {
             "displayName": "DB Vendor",
             "description": "DB vendor (H2, POSTGRES, MYSQL or MARIADB)",
             "name": "DB_VENDOR",
-            "value": "H2",
+            "value": "POSTGRES",
+            "required": true
+        },
+		{
+            "displayName": "DB Host Address",
+            "description": "DB host address",
+            "name": "DB_ADDR",
+            "value": "178.154.233.162",
             "required": true
         },
         {
