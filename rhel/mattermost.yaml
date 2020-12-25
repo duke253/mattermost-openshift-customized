@@ -36,21 +36,6 @@ objects:
     resources:
       requests:
         storage: "${VOLUME_CAPACITY}"
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    name: '${APPLICATION_NAME}'
-  spec:
-    tags:  
-    - name: '${MATTERMOST_VERSION}'
-      annotations:
-        description: The Mattermost image from quay.io/duke253/mattermost-openshift-customized
-        openshift.io/display-name: 'Mattermost ${MATTERMOST_VERSION}'
-        tags: mattermost
-        version: '${MATTERMOST_VERSION}'
-      from:
-        kind: DockerImage
-        name: 'quay.io/duke253/mattermost-openshift-customized:1.0'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -68,7 +53,7 @@ objects:
           name: '${APPLICATION_NAME}'
       spec:
         containers:
-        - image: '${APPLICATION_NAME}'
+        - image: 'quay.io/duke253/mattermost-openshift-customized:1.3'
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
           volumeMounts:
@@ -85,6 +70,16 @@ objects:
               secretKeyRef:
                 key: password
                 name: mattermost-database
+          - name: MM_GITLAB_ID
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: mattermost-gitlab
+          - name: MM_GITLAB_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: mattermost-gitlab
           - name: DB_DATABASE
             valueFrom:
               configMapKeyRef:
