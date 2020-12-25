@@ -11,6 +11,8 @@ DB_PORT=${DB_PORT:-5432}
 DB_USERNAME=${DB_USERNAME:-mm_user}
 DB_PASSWORD=${DB_PASSWORD:-mm_pass}
 DB_DATABASE=${DB_DATABASE:-mm_db}
+MM_GITLAB_SECRET=${MM_GITLAB_SECRET:-mm_gitlab_secret}
+MM_GITLAB_ID=${MM_GITLAB_ID:-mm_gitlab_secret}
 MM_CONFIG=${MM_CONFIG:-/opt/mattermost/data/config.json}
 
 if [ ! -f $MM_CONFIG ]; then
@@ -22,6 +24,11 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.EmailSettings.InviteSalt = "'$(generate_salt)'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
     jq '.EmailSettings.PasswordResetSalt = "'$(generate_salt)'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.GitLabSettings.Enable = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.Secret = "$MM_GITLAB_SECRET"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.Id = "$MM_GITLAB_ID"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.AuthEndpoint = "https://secure-keycloak-mattermost-008.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/auth"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.TokenEndpoint = "https://secure-keycloak-mattermost-008.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/token"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.UserApiEndpoint = "https://secure-keycloak-mattermost-008.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/userinfo"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	echo "done"
 else
 	echo -ne "Using existing config: "$MM_CONFIG
