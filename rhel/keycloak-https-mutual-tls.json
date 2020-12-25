@@ -2,7 +2,7 @@
     "kind": "Template",
     "apiVersion": "v1",
     "metadata": {
-        "name": "keycloak-https",
+        "name": "keycloak-https-mutual-tls",
         "annotations": {
             "iconClass": "icon-sso",
             "tags": "keycloak",
