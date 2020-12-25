@@ -12,7 +12,7 @@ DB_USERNAME=${DB_USERNAME:-mm_user}
 DB_PASSWORD=${DB_PASSWORD:-mm_pass}
 DB_DATABASE=${DB_DATABASE:-mm_db}
 MM_GITLAB_SECRET=${MM_GITLAB_SECRET:-mm_gitlab_secret}
-MM_GITLAB_ID=${MM_GITLAB_ID:-mm_gitlab_secret}
+MM_GITLAB_ID=${MM_GITLAB_ID:-mm_gitlab_id}
 MM_CONFIG=${MM_CONFIG:-/opt/mattermost/data/config.json}
 
 if [ ! -f $MM_CONFIG ]; then
