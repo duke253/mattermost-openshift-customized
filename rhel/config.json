@@ -14,7 +14,7 @@
         "EnableTesting": false,
         "EnableDeveloper": false,
         "EnableSecurityFixAlert": true,
-        "EnableInsecureOutgoingConnections": true,
+        "EnableInsecureOutgoingConnections": false,
         "EnableMultifactorAuthentication": false,
         "AllowCorsFrom": "",
         "SessionLengthWebInDays": 30,

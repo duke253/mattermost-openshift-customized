@@ -29,7 +29,8 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.GitLabSettings.AuthEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/auth"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.TokenEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/token"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.UserApiEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/userinfo"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-		
+	jq '.ServiceSettings.EnableInsecureOutgoingConnections = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	
 	echo "done"
 else
 	echo -ne "Using existing config: "$MM_CONFIG
