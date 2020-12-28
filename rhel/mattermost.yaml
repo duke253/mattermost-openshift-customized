@@ -50,7 +50,7 @@ objects:
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'quay.io/duke253/mattermost-openshift-customized:1.5'
+        name: 'quay.io/duke253/mattermost-openshift-customized:1.6'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
