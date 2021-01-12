@@ -13,7 +13,18 @@ DB_PASSWORD=${DB_PASSWORD:-mm_pass}
 DB_DATABASE=${DB_DATABASE:-mm_db}
 MM_GITLAB_SECRET=${MM_GITLAB_SECRET:-mm_gitlab_secret}
 MM_GITLAB_ID=${MM_GITLAB_ID:-mm_gitlab_id}
-MM_CONFIG=${MM_CONFIG:-/opt/mattermost/data/config.json}
+MM_CONFIG=${MM_CONFIG:-/opt/mattermost/config.json}
+S3_KEY=${S3_KEY:-none}
+S3_SECRET=${S3_SECRET:-none}
+S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
+S3_URL_DATA=${S3_URL_DATA:-none}
+
+# Create passwd file for S3
+echo "${AWS_KEY}:${AWS_SECRET}" > /opt/mattermost/.passwd-s3fs
+chmod 600 /opt/mattermost/.passwd-s3fs
+
+# Mount S3
+s3fs "${S3_BUCKET_DATA}" /opt/mattermost/data -o passwd_file=/opt/mattermost/.passwd-s3fs -o url="${S3_URL_DATA}" -o use_path_request_style
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."

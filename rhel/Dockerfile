@@ -2,6 +2,10 @@ FROM ubi7/ubi:latest
 
 ENV MATTERMOST_VERSION 5.29.0
 ENV MATTERMOST_VERSION_SHORT 5290
+ENV S3_KEY none
+ENV S3_SECRET none
+ENV S3_BUCKET_DATA none
+ENV S3_URL_DATA none
 ARG PUID=2000
 ARG PGID=2000
 
@@ -25,6 +29,7 @@ RUN yum -y install yum install https://dl.fedoraproject.org/pub/epel/epel-releas
 	yum -y install mailcap &&\
 	yum -y install nmap-ncat &&\
 	yum -y install xmlsec1 &&\
+	yum -y install s3fs-fuse &&\
 	yum clean all -y
 
 RUN cd /opt && \
