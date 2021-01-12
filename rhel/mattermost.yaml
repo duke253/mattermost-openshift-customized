@@ -26,16 +26,6 @@ metadata:
     template.openshift.io/support-url: https://github.com/duke253/mattermost-openshift-customized/issues
 
 objects:
-- kind: PersistentVolumeClaim
-  apiVersion: v1
-  metadata:
-    name: "mattermost-data"
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: "${VOLUME_CAPACITY}"
 - kind: ImageStream
   apiVersion: v1
   metadata:
