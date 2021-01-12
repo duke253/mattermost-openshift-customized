@@ -20,7 +20,7 @@ S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
 S3_URL_DATA=${S3_URL_DATA:-none}
 
 # Create passwd file for S3
-echo "${AWS_KEY}:${AWS_SECRET}" > /opt/mattermost/.passwd-s3fs
+echo "${S3_KEY}:${S3_SECRET}" > /opt/mattermost/.passwd-s3fs
 chmod 600 /opt/mattermost/.passwd-s3fs
 
 # Mount S3
