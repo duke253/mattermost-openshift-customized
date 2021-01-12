@@ -50,7 +50,7 @@ objects:
         version: '${MATTERMOST_VERSION}'
       from:
         kind: DockerImage
-        name: 'quay.io/duke253/mattermost-openshift-customized:1.6'
+        name: 'quay.io/duke253/mattermost-openshift-customized:1.7'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -71,9 +71,6 @@ objects:
         - image: '${APPLICATION_NAME}'
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
-          volumeMounts:
-            - mountPath: /opt/mattermost/data
-              name: mattermost-data
           env:
           - name: DB_USERNAME
             valueFrom:
@@ -95,6 +92,16 @@ objects:
               secretKeyRef:
                 key: password
                 name: mattermost-gitlab
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: mattermost-s3
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: mattermost-s3
           - name: DB_DATABASE
             valueFrom:
               configMapKeyRef:
@@ -110,6 +117,10 @@ objects:
               configMapKeyRef:
                 key: db_port
                 name: mattermost
+          - name: S3_BUCKET_DATA
+            value: ${S3_BUCKET_DATA}
+          - name: S3_URL_DATA
+            value: ${S3_URL_DATA}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -139,10 +150,6 @@ objects:
             requests:
               cpu: 250m
               memory: 128Mi
-        volumes:
-        - name: mattermost-data
-          persistentVolumeClaim:
-            claimName: mattermost-data
     triggers:
     - type: ImageChange
       imageChangeParams:
@@ -191,11 +198,18 @@ parameters:
 - name: MATTERMOST_VERSION
   required: true
   value: '5.29.0'
-- name: VOLUME_CAPACITY
-  required: true
-  value: 10G
 - description: Name of the PostgreSQL database accessed.
   displayName: PostgreSQL Database Name
   name: POSTGRESQL_DATABASE
   required: true
   value: mattermostdb02
+- description: S3 BUCKET NAME FOR DATA
+  displayName: S3 bucket name for data
+  name: S3_BUCKET_DATA
+  required: true
+  value: mm-data
+- description: S3 URL
+  displayName: S3 URL
+  name: S3_URL_DATA
+  required: true
+  value: http://84.201.166.183:9000
