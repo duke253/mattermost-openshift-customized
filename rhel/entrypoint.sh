@@ -54,7 +54,7 @@ echo "done"
 
 echo -ne "Switching to user mattermost..."
 # Switch to user mattermost
-exec sudo -iu mattermost
+exec su - mattermost -c "$*"
 echo "done"
 
 echo -ne "Starting mattermost server..."
