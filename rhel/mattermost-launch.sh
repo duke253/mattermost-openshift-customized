@@ -1,5 +1,7 @@
 #!/bin/sh
 
+MM_CONFIG=${MM_CONFIG:-/opt/mattermost/config.json}
+
 # Switch to user mattermost
 exec sudo -iu mattermost
 
