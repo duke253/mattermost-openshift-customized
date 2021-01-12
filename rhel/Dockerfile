@@ -9,28 +9,40 @@ ENV S3_URL_DATA none
 ARG PUID=2000
 ARG PGID=2000
 
-# Labels consumed by Red Hat build service
-LABEL Component="mattermost" \
-      name="alpine/mattermost-${MATTERMOST_VERSION_SHORT}-ubi7" \
-      vendor=Community \
-      Version="${MATTERMOST_VERSION}" \
-      Release="1"
-
 # Labels could be consumed by OpenShift
 LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-alternative" \
       io.k8s.display-name="Mattermost {$MATTERMOST_VERSION}" \
       io.openshift.expose-services="8065:mattermost" \
       io.openshift.tags="mattermost,slack"
 
-# Install some needed packages
-RUN yum -y install yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
+# Install fuse & s3fs packages
+RUN yum -y install automake gcc-c++ git libcurl-devel libxml2-devel make openssl-devel wget &&\
+	cd /usr/local/src &&\
+	wget https://github.com/libfuse/libfuse/releases/download/fuse-2.9.7/fuse-2.9.7.tar.gz &&\
+	tar -xzvf fuse-2.9.7.tar.gz &&\
+	rm -f fuse-2.9.7.tar.gz &&\
+	mv fuse-2.9.7 fuse &&\
+	cd fuse/ &&\
+	./configure --prefix=/usr &&\
+	make &&\
+	make install &&\
+	export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig/ &&\
+	ldconfig &&\
+	cd /usr/local/src &&\
+	git clone https://github.com/s3fs-fuse/s3fs-fuse.git &&\
+	cd s3fs-fuse &&\
+	./autogen.sh &&\
+	./configure &&\
+	make &&\
+	make install
+
+# Install some needed packages for MM
+RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
 	yum -y install jq &&\
 	yum -y install kernel-headers &&\
 	yum -y install mailcap &&\
 	yum -y install nmap-ncat &&\
 	yum -y install xmlsec1 &&\
-	yum -y install fuse3-libs &&\
-	yum -y install s3fs-fuse &&\
 	yum clean all -y
 
 RUN cd /opt && \
