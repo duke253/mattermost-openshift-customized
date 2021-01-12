@@ -50,10 +50,5 @@ fi
 
 echo -ne "Switching to user mattermost..."
 # Switch to user mattermost
-exec su - mattermost -c "$*"
-echo "done"
-
-echo -ne "Starting mattermost server..."
-# Start mattermost server
-exec /opt/mattermost/bin/platform -c $MM_CONFIG
+exec su - mattermost -c "/opt/mattermost/bin/platform -c $MM_CONFIG"
 echo "done"
