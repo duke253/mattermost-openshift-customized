@@ -53,8 +53,9 @@ RUN cd /opt && \
 COPY config.json /opt/mattermost/config/config.json
 
 COPY mattermost-launch.sh /opt/mattermost/bin/mattermost-launch.sh
+COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
 RUN chmod +x /opt/mattermost/bin/mattermost-launch.sh
-ENTRYPOINT [ "/opt/mattermost/bin/mattermost-launch.sh" ]
+RUN chmod +x /opt/mattermost/bin/entrypoint.sh
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
@@ -68,5 +69,7 @@ RUN groupadd -g ${PGID} mattermost \
 EXPOSE 8065
 
 WORKDIR /opt/mattermost
+
+ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
 
 CMD [ "/opt/mattermost/bin/mattermost-launch.sh" ]
