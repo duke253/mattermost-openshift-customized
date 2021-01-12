@@ -63,7 +63,7 @@ RUN groupadd -g ${PGID} mattermost \
 	&& chown -R mattermost:mattermost /opt/mattermost \
 	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
-USER 2000
+# USER 2000
 
 EXPOSE 8065
 

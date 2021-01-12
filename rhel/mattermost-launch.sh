@@ -21,10 +21,14 @@ S3_URL_DATA=${S3_URL_DATA:-none}
 
 # Create passwd file for S3
 echo "${S3_KEY}:${S3_SECRET}" > /opt/mattermost/.passwd-s3fs
+chown mattermost:mattermost /opt/mattermost/.passwd-s3fs
 chmod 600 /opt/mattermost/.passwd-s3fs
 
 # Mount S3
 s3fs "${S3_BUCKET_DATA}" /opt/mattermost/data -o passwd_file=/opt/mattermost/.passwd-s3fs -o url="${S3_URL_DATA}" -o use_path_request_style
+
+# Switch to user mattermost
+exec su - mattermost -c "$*"
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
