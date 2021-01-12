@@ -48,10 +48,6 @@ else
 	echo -ne "Using existing config: "$MM_CONFIG
 fi
 
-echo -ne "Starting launch script..."
-MM_CONFIG=${MM_CONFIG:-/opt/mattermost/config.json}
-echo "done"
-
 echo -ne "Switching to user mattermost..."
 # Switch to user mattermost
 exec su - mattermost -c "$*"

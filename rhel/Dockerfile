@@ -72,4 +72,4 @@ WORKDIR /opt/mattermost
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
 
-CMD [ "/opt/mattermost/bin/entrypoint.sh" ]
+CMD [ "/opt/mattermost/bin/platform -c $MM_CONFIG" ]
