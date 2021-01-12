@@ -29,6 +29,7 @@ RUN yum -y install yum install https://dl.fedoraproject.org/pub/epel/epel-releas
 	yum -y install mailcap &&\
 	yum -y install nmap-ncat &&\
 	yum -y install xmlsec1 &&\
+	yum -y install fuse3 &&\
 	yum -y install s3fs-fuse &&\
 	yum clean all -y
 
