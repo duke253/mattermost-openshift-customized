@@ -21,7 +21,7 @@ S3_KEY=${S3_KEY:-none}
 S3_SECRET=${S3_SECRET:-none}
 S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
 S3_URL_DATA=${S3_URL_DATA:-none}
-echo -ne $DB_HOST
+echo $DB_HOST
 echo $DB_PORT
 echo $DB_DATABASE
 echo $DB_USERNAME
@@ -68,5 +68,5 @@ else
 fi
 
 # Switch to user mattermost
-echo -ne "Switch to user mattermost & run mattermost server..."
-exec su - mattermost -c "/opt/mattermost/bin/mattermost -c $MM_CONFIG"
+echo -ne "Run mattermost server..."
+exec /opt/mattermost/bin/mattermost -c $MM_CONFIG
