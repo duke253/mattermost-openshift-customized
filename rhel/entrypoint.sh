@@ -1,5 +1,7 @@
 #!/bin/sh
 
+exec whoami
+
 # Function to generate a random salt
 echo -ne "Create function to generate a random salt..."
 generate_salt() {
@@ -21,7 +23,7 @@ S3_KEY=${S3_KEY:-none}
 S3_SECRET=${S3_SECRET:-none}
 S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
 S3_URL_DATA=${S3_URL_DATA:-none}
-echo $DB_HOST
+echo -ne $DB_HOST
 echo $DB_PORT
 echo $DB_DATABASE
 echo $DB_USERNAME
