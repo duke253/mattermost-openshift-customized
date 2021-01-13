@@ -49,7 +49,9 @@ RUN cd /opt && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
 
-COPY fstab /etc/fstab
+COPY s3fs.service /etc/systemd/system/s3fs.service
+
+RUN systemctl enable s3fs
 
 COPY config.json /opt/mattermost/config/config.json
 

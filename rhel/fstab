@@ -1,1 +1,0 @@
-mm-data /opt/mattermost/data fuse.s3fs _netdev,allow_other,use_path_request_style,url=http://84.201.166.183:9000,passwd_file=/opt/mattermost/.passwd-s3fs 0 0
