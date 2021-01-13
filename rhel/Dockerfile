@@ -2,10 +2,10 @@ FROM ubi7/ubi:latest
 
 ENV MATTERMOST_VERSION 5.29.0
 ENV MATTERMOST_VERSION_SHORT 5290
-ENV S3_KEY none
-ENV S3_SECRET none
-ENV S3_BUCKET_DATA none
-ENV S3_URL_DATA none
+# ENV S3_KEY none
+# ENV S3_SECRET none
+# ENV S3_BUCKET_DATA none
+# ENV S3_URL_DATA none
 ARG PUID=2000
 ARG PGID=2000
 
@@ -52,9 +52,8 @@ RUN cd /opt && \
 
 COPY config.json /opt/mattermost/config/config.json
 
-COPY mattermost-launch.sh /opt/mattermost/bin/mattermost-launch.sh
 COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
-RUN chmod +x /opt/mattermost/bin/mattermost-launch.sh
+
 RUN chmod +x /opt/mattermost/bin/entrypoint.sh
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
@@ -64,12 +63,8 @@ RUN groupadd -g ${PGID} mattermost \
 	&& chown -R mattermost:mattermost /opt/mattermost \
 	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
-# USER 2000
-
 EXPOSE 8065
 
 WORKDIR /opt/mattermost
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
-
-# CMD [ "/opt/mattermost/bin/platform -c $MM_CONFIG" ]

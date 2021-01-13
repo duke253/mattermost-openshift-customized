@@ -1,11 +1,14 @@
 #!/bin/sh
 
 # Function to generate a random salt
+echo -ne "Create function to generate a random salt..."
 generate_salt() {
   cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 48 | head -n 1
 }
+echo "done"
 
 # Read environment variables or set default values
+echo -ne "Read environment variables..."
 DB_HOST=${DB_HOST:-db}
 DB_PORT=${DB_PORT:-5432}
 DB_USERNAME=${DB_USERNAME:-mm_user}
@@ -18,14 +21,30 @@ S3_KEY=${S3_KEY:-none}
 S3_SECRET=${S3_SECRET:-none}
 S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
 S3_URL_DATA=${S3_URL_DATA:-none}
+echo $DB_HOST
+echo $DB_PORT
+echo $DB_DATABASE
+echo $DB_USERNAME
+echo $DB_PASSWORD
+echo $MM_GITLAB_ID
+echo $MM_GITLAB_SECRET
+echo $MM_CONFIG
+echo $S3_KEY
+echo $S3_SECRET
+echo $S3_BUCKET_DATA
+echo $S3_URL_DATA
 
 # Create passwd file for S3
+echo -ne "Create passwd file for S3..."
 echo "${S3_KEY}:${S3_SECRET}" > /opt/mattermost/.passwd-s3fs
 chown mattermost:mattermost /opt/mattermost/.passwd-s3fs
 chmod 600 /opt/mattermost/.passwd-s3fs
+echo "done"
 
 # Mount S3
+echo -ne "Mount S3..."
 s3fs "${S3_BUCKET_DATA}" /opt/mattermost/data -o passwd_file=/opt/mattermost/.passwd-s3fs -o url="${S3_URL_DATA}" -o use_path_request_style
+echo "done"
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
@@ -48,7 +67,7 @@ else
 	echo -ne "Using existing config: "$MM_CONFIG
 fi
 
-echo -ne "Switching to user mattermost..."
 # Switch to user mattermost
-exec su - mattermost -c "/opt/mattermost/bin/platform -c $MM_CONFIG"
+echo -ne "Switch to user mattermost & run mattermost server..."
+exec su - mattermost -c "/opt/mattermost/bin/mattermost -c $MM_CONFIG"
 echo "done"
