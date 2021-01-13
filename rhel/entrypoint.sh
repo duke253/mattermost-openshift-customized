@@ -70,6 +70,3 @@ fi
 # Switch to user mattermost
 echo -ne "Switch to user mattermost & run mattermost server..."
 exec su - mattermost -c "/opt/mattermost/bin/mattermost -c $MM_CONFIG"
-echo "done"
-
-exec whoami
