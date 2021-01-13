@@ -17,6 +17,7 @@ LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-altern
 
 # Install fuse & s3fs packages
 RUN yum -y install automake gcc-c++ git libcurl-devel libxml2-devel make openssl-devel wget &&\
+	yum clean all -y &&\
 	cd /usr/local/src &&\
 	wget https://github.com/libfuse/libfuse/releases/download/fuse-2.9.7/fuse-2.9.7.tar.gz &&\
 	tar -xzvf fuse-2.9.7.tar.gz &&\

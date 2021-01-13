@@ -1,7 +1,5 @@
 #!/bin/sh
 
-exec whoami
-
 # Function to generate a random salt
 echo -ne "Create function to generate a random salt..."
 generate_salt() {
@@ -47,6 +45,8 @@ echo "done"
 echo -ne "Mount S3..."
 s3fs "${S3_BUCKET_DATA}" /opt/mattermost/data -o passwd_file=/opt/mattermost/.passwd-s3fs -o url="${S3_URL_DATA}" -o use_path_request_style
 echo "done"
+
+exec whoami
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
