@@ -26,21 +26,6 @@ metadata:
     template.openshift.io/support-url: https://github.com/duke253/mattermost-openshift-customized/issues
 
 objects:
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-    name: '${APPLICATION_NAME}'
-  spec:
-    tags:  
-    - name: '${MATTERMOST_VERSION}'
-      annotations:
-        description: The Mattermost image from quay.io/duke253/mattermost-openshift-customized
-        openshift.io/display-name: 'Mattermost ${MATTERMOST_VERSION}'
-        tags: mattermost
-        version: '${MATTERMOST_VERSION}'
-      from:
-        kind: DockerImage
-        name: 'quay.io/duke253/mattermost-openshift-customized:1.7'
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
@@ -58,8 +43,7 @@ objects:
           name: '${APPLICATION_NAME}'
       spec:
         containers:
-        - image: '${APPLICATION_NAME}'
-          imagePullPolicy: Always
+        - image: quay.io/duke253/mattermost-openshift-customized:1.8
           name: '${APPLICATION_NAME}'
           env:
           - name: DB_USERNAME
@@ -140,16 +124,6 @@ objects:
             requests:
               cpu: 250m
               memory: 128Mi
-    triggers:
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - '${APPLICATION_NAME}'
-        from:
-          kind: ImageStreamTag
-          name: '${APPLICATION_NAME}:${MATTERMOST_VERSION}'
-    - type: ConfigChange
 - kind: Service
   apiVersion: v1
   metadata:
