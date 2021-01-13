@@ -47,6 +47,8 @@ RUN cd /opt && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
 
+CMD ["/usr/sbin/init"]
+
 COPY s3fs.service /etc/systemd/system/s3fs.service
 
 RUN chmod +x /etc/systemd/system/s3fs.service
