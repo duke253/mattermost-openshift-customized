@@ -2,10 +2,8 @@ FROM ubi7/ubi:latest
 
 ENV MATTERMOST_VERSION 5.29.0
 ENV MATTERMOST_VERSION_SHORT 5290
-# ENV S3_KEY none
-# ENV S3_SECRET none
-# ENV S3_BUCKET_DATA none
-# ENV S3_URL_DATA none
+# ENV S3_BUCKET_DATA mm-data
+# ENV S3_URL_DATA http://84.201.166.183:9000
 ARG PUID=2000
 ARG PGID=2000
 
@@ -51,6 +49,8 @@ RUN cd /opt && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
 
+COPY fstab /etc/fstab
+
 COPY config.json /opt/mattermost/config/config.json
 
 COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
@@ -67,5 +67,7 @@ RUN groupadd -g ${PGID} mattermost \
 EXPOSE 8065
 
 WORKDIR /opt/mattermost
+
+USER 2000
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
