@@ -70,6 +70,6 @@ EXPOSE 8065
 
 WORKDIR /opt/mattermost
 
-USER 2000
+# USER 2000
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
