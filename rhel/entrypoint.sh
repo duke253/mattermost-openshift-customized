@@ -34,13 +34,6 @@ echo $S3_SECRET
 echo $S3_BUCKET_DATA
 echo $S3_URL_DATA
 
-# Create passwd file for S3
-echo -ne "Create passwd file for S3..."
-echo "${S3_KEY}:${S3_SECRET}" > /opt/mattermost/.passwd-s3fs
-chown mattermost:mattermost /opt/mattermost/.passwd-s3fs
-chmod 600 /opt/mattermost/.passwd-s3fs
-echo "done"
-
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
 	cp /opt/mattermost/config/config.json $MM_CONFIG
@@ -62,6 +55,6 @@ else
 	echo -ne "Using existing config: "$MM_CONFIG
 fi
 
-# Switch to user mattermost
-echo -ne "Run mattermost server..."
+# Start mattermost server
+echo -ne "Start mattermost server..."
 exec /opt/mattermost/bin/mattermost -c $MM_CONFIG

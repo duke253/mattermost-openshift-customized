@@ -11,28 +11,6 @@ LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-altern
       io.openshift.expose-services="8065:mattermost" \
       io.openshift.tags="mattermost,slack"
 
-# Install fuse & s3fs packages
-RUN yum -y install automake gcc-c++ git libcurl-devel libxml2-devel make openssl-devel wget &&\
-	yum clean all -y &&\
-	cd /usr/local/src &&\
-	wget https://github.com/libfuse/libfuse/releases/download/fuse-2.9.7/fuse-2.9.7.tar.gz &&\
-	tar -xzvf fuse-2.9.7.tar.gz &&\
-	rm -f fuse-2.9.7.tar.gz &&\
-	mv fuse-2.9.7 fuse &&\
-	cd fuse/ &&\
-	./configure --prefix=/usr &&\
-	make &&\
-	make install &&\
-	export PKG_CONFIG_PATH=/usr/lib/pkgconfig:/usr/lib64/pkgconfig/ &&\
-	ldconfig &&\
-	cd /usr/local/src &&\
-	git clone https://github.com/s3fs-fuse/s3fs-fuse.git &&\
-	cd s3fs-fuse &&\
-	./autogen.sh &&\
-	./configure &&\
-	make &&\
-	make install
-
 # Install some needed packages for MM
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
 	yum -y install jq &&\
@@ -46,10 +24,6 @@ RUN cd /opt && \
     curl -LO -v https://releases.mattermost.com/${MATTERMOST_VERSION}/mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
-
-COPY s3fs.service /etc/systemd/system/s3fs.service
-
-RUN systemctl enable s3fs
 
 COPY config.json /opt/mattermost/config/config.json
 
@@ -68,10 +42,6 @@ EXPOSE 8065
 
 WORKDIR /opt/mattermost
 
-# USER 2000
+USER 2000
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
-
-VOLUME [ "/sys/fs/cgroup" ]
-
-CMD ["/usr/sbin/init"]
