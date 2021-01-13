@@ -2,8 +2,6 @@ FROM ubi7/ubi:latest
 
 ENV MATTERMOST_VERSION 5.29.0
 ENV MATTERMOST_VERSION_SHORT 5290
-# ENV S3_BUCKET_DATA mm-data
-# ENV S3_URL_DATA http://84.201.166.183:9000
 ARG PUID=2000
 ARG PGID=2000
 
@@ -51,7 +49,11 @@ RUN cd /opt && \
 
 COPY s3fs.service /etc/systemd/system/s3fs.service
 
+RUN chmod +x /etc/systemd/system/s3fs.service
+
 RUN systemctl enable s3fs
+
+RUN systemctl start s3fs
 
 COPY config.json /opt/mattermost/config/config.json
 
