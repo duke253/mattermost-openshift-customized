@@ -46,8 +46,6 @@ echo -ne "Mount S3..."
 s3fs "${S3_BUCKET_DATA}" /opt/mattermost/data -o passwd_file=/opt/mattermost/.passwd-s3fs -o url="${S3_URL_DATA}" -o use_path_request_style
 echo "done"
 
-exec whoami
-
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
 	cp /opt/mattermost/config/config.json $MM_CONFIG
@@ -73,3 +71,5 @@ fi
 echo -ne "Switch to user mattermost & run mattermost server..."
 exec su - mattermost -c "/opt/mattermost/bin/mattermost -c $MM_CONFIG"
 echo "done"
+
+exec whoami
