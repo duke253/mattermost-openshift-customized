@@ -2,6 +2,8 @@ OpenShift application template for Mattermost Team Edition.
 Integrated with Microsoft Active Directory via Keycloak.
 Uses Minio (S3) as a file storage and Postgres as external databases for Mattermost and Keycloak.
 
+Note^ Latest files in ./rhel
+
 # Step 0
 
 Adjust parameters in mattermost.yaml and keycloak-https.yaml regarding your environment (e.g. DB host, DB port, DB name etc...). See parameters and configmap.
