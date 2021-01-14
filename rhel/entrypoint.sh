@@ -49,6 +49,17 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.GitLabSettings.TokenEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/token"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.UserApiEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/userinfo"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.ServiceSettings.EnableInsecureOutgoingConnections = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.FileSettings.DriverName = "amazons3"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3AccessKeyId = "'$S3_KEY'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3SecretAccessKey = "'$S3_SECRET'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3Bucket = "'$S3_BUCKET_DATA'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3PathPrefix = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3Region = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3Endpoint = "'S3_URL_DATA'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3SSL = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3SignV2 = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3SSE = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3Trace = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	
 	echo "done"
 else
