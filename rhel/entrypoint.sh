@@ -55,7 +55,7 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.FileSettings.AmazonS3Bucket = "'$S3_BUCKET_DATA'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3PathPrefix = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3Region = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-	jq '.FileSettings.AmazonS3Endpoint = "'S3_URL_DATA'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3Endpoint = "'$S3_URL_DATA'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SSL = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SignV2 = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SSE = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
