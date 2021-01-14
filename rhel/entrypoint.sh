@@ -38,6 +38,9 @@ echo $S3_KEY
 echo $S3_SECRET
 echo $S3_BUCKET
 echo $S3_URL
+echo $GITLAB_AUTHENDPOINT
+echo $GITLAB_TOKENENDPOINT
+echo $GITLAB_USERAPIENAPOINT
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
