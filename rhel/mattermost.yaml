@@ -43,7 +43,7 @@ objects:
           name: '${APPLICATION_NAME}'
       spec:
         containers:
-        - image: quay.io/duke253/mattermost-openshift-customized:1.11
+        - image: quay.io/duke253/mattermost-openshift-customized:1.12
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
           env:
@@ -92,10 +92,16 @@ objects:
               configMapKeyRef:
                 key: db_port
                 name: mattermost
-          - name: S3_BUCKET_DATA
-            value: ${S3_BUCKET_DATA}
-          - name: S3_URL_DATA
-            value: ${S3_URL_DATA}
+          - name: S3_BUCKET
+            value: ${S3_BUCKET}
+          - name: S3_URL
+            value: ${S3_URL}
+          - name: GITLAB_AUTHENDPOINT
+            value: ${GITLAB_AUTHENDPOINT}
+          - name: GITLAB_TOKENENDPOINT
+            value: ${GITLAB_TOKENENDPOINT}
+          - name: GITLAB_USERAPIENAPOINT
+            value: ${GITLAB_USERAPIENAPOINT}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -168,13 +174,29 @@ parameters:
   name: POSTGRESQL_DATABASE
   required: true
   value: mattermostdb02
-- description: S3 BUCKET NAME FOR DATA
-  displayName: S3 bucket name for data
-  name: S3_BUCKET_DATA
+- description: S3 BUCKET
+  displayName: S3 bucket
+  name: S3_BUCKET
   required: true
   value: mm-data
 - description: S3 URL
   displayName: S3 URL
-  name: S3_URL_DATA
+  name: S3_URL
   required: true
   value: 84.201.166.183:9000
+- description: GITLAB AUTHENDPOINT
+  displayName: GITLAB AuthEndpoint
+  name: GITLAB_AUTHENDPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/auth
+- description: GITLAB TOKENENDPOINT
+  displayName: GITLAB TokenEndpoint
+  name: GITLAB_TOKENENDPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/token
+- description: GITLAB USERAPIENAPOINT
+  displayName: GITLAB UserApiEndpoint
+  name: GITLAB_USERAPIENAPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/userinfo
+

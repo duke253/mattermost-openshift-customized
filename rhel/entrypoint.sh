@@ -19,8 +19,13 @@ MM_GITLAB_ID=${MM_GITLAB_ID:-mm_gitlab_id}
 MM_CONFIG=${MM_CONFIG:-/opt/mattermost/config.json}
 S3_KEY=${S3_KEY:-none}
 S3_SECRET=${S3_SECRET:-none}
-S3_BUCKET_DATA=${S3_BUCKET_DATA:-none}
-S3_URL_DATA=${S3_URL_DATA:-none}
+S3_BUCKET=${S3_BUCKET:-none}
+S3_URL=${S3_URL:-none}
+
+GITLAB_AUTHENDPOINT=${GITLAB_AUTHENDPOINT:-none}
+GITLAB_TOKENENDPOINT=${GITLAB_TOKENENDPOINT:-none}
+GITLAB_USERAPIENAPOINT=${GITLAB_USERAPIENAPOINT:-none}
+
 echo $DB_HOST
 echo $DB_PORT
 echo $DB_DATABASE
@@ -31,8 +36,8 @@ echo $MM_GITLAB_SECRET
 echo $MM_CONFIG
 echo $S3_KEY
 echo $S3_SECRET
-echo $S3_BUCKET_DATA
-echo $S3_URL_DATA
+echo $S3_BUCKET
+echo $S3_URL
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
@@ -45,9 +50,9 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.GitLabSettings.Enable = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.Secret = "'$MM_GITLAB_SECRET'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.Id = "'$MM_GITLAB_ID'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-	jq '.GitLabSettings.AuthEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/auth"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-	jq '.GitLabSettings.TokenEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/token"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-	jq '.GitLabSettings.UserApiEndpoint = "https://secure-keycloak-mattermost.apps.cluster1.piewitheye.com/auth/realms/mattermost/protocol/openid-connect/userinfo"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.AuthEndpoint = "'$GITLAB_AUTHENDPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.TokenEndpoint = "'$GITLAB_TOKENENDPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.GitLabSettings.UserApiEndpoint = "'$GITLAB_USERAPIENAPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.ServiceSettings.EnableInsecureOutgoingConnections = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.FileSettings.DriverName = "amazons3"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3AccessKeyId = "'$S3_KEY'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
