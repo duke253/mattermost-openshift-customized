@@ -10,39 +10,39 @@ Adjust parameters in mattermost.yaml and keycloak-https.yaml regarding your envi
 
 ### Step 1
 
-**create new project**
+create new project
 ```
 oc new-project mattermost
 ```
-**create service account**
+create service account
 ```
 oc create serviceaccount mattermost
 ```
-**put the mattermost service account in anyuid scc and adjust the uid range for the namespace to run with**
+put the mattermost service account in anyuid scc and adjust the uid range for the namespace to run with
 ```
 oc adm policy add-scc-to-user anyuid system:serviceaccount:mattermost:mattermost
 oc annotate namespace mattermost openshift.io/sa.scc.uid-range=2000/2000 --overwrite
 ```
 ### Step 2 - Keycloak
 
-**create secret for Keycloak Admin**
+create secret for Keycloak Admin
 ```
 oc create secret generic keycloak-secret \
 --from-literal=user=%username% \
 --from-literal=password=%password%
 ```
-**create secret for Keyclaok DB**
+create secret for Keyclaok DB
 ```
 oc create secret generic keycloak-database \
 --from-literal=user=%username% \
 --from-literal=password=%password%
 ```
-**create template**
+create template
 ```
 oc create --filename keycloak-https.yaml
 ```
 
-**deploy new app from template**
+deploy new app from template
 ```
 oc new-app --template=keycloak-https -p NAMESPACE=mattermost
 ```
@@ -51,38 +51,38 @@ oc new-app --template=keycloak-https -p NAMESPACE=mattermost
 
 ### Step 3 - Mattermost
 
-**create new secret for DB**
+create new secret for DB
 ```
 oc create secret generic mattermost-database \
 --from-literal=user=%username% \
 --from-literal=password=%password%
 ```
-**create new secret for Gitlab (AD)**
+create new secret for Gitlab (AD)
 ```
 oc create secret generic mattermost-gitlab \
 --from-literal=user=%Client_ID% \
 --from-literal=password=%Client_Secret%
 ```
-**create new secret for Minio (S3)**
+create new secret for Minio (S3)
 ```
 oc create secret generic mattermost-s3 \
 --from-literal=user=%Access_Key_ID% \
 --from-literal=password=%Secret_Access_Key%
 ```
 
-**link secret to service account**
+link secret to service account
 ```
 oc secrets link mattermost mattermost-database
 oc secrets link mattermost mattermost-gitlab
 oc secrets link mattermost mattermost-s3
 ```
 
-**create template**
+create template
 ```
 oc create --filename mattermost.yaml
 ```
 
-**deploy new app from template**
+deploy new app from template
 ```
 oc new-app --template=mattermost --labels=app=mattermost
 ```
