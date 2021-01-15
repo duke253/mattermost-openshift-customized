@@ -43,7 +43,7 @@ objects:
           name: '${APPLICATION_NAME}'
       spec:
         containers:
-        - image: quay.io/duke253/mattermost-openshift-customized:1.12
+        - image: quay.io/duke253/mattermost-openshift-customized:1.13
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
           env:
@@ -183,7 +183,7 @@ parameters:
   displayName: S3 URL
   name: S3_URL
   required: true
-  value: 84.201.166.183:9000
+  value: 130.193.58.121:9000
 - description: GITLAB AUTHENDPOINT
   displayName: GITLAB AuthEndpoint
   name: GITLAB_AUTHENDPOINT
