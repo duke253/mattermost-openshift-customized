@@ -116,7 +116,7 @@ objects:
                 name: keycloak-database
           - name: DB_DATABASE
             value: ${DB_DATABASE}
-          image: quay.io/keycloak/keycloak:latest
+          image: quay.io/keycloak/keycloak:11.0.2
           livenessProbe:
             failureThreshold: 3
             httpGet:
