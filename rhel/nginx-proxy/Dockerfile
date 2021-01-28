@@ -12,7 +12,7 @@ RUN mkdir /etc/nginx/cert
 
 # deploy specific nginx configuration file
 COPY mm-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
-ln -s /etc/nginx/conf.d/mm-proxy.conf /etc/nginx/conf.d/default.conf
+RUN ln -s /etc/nginx/conf.d/mm-proxy.conf /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # support running as arbitrary user which belogs to the root group
