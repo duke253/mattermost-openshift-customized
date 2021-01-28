@@ -6,14 +6,12 @@ RUN rm /etc/nginx/nginx.conf
 
 # deploy specific nginx configuration file
 COPY mm-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
-#RUN ln -s /etc/nginx/conf.d/mm-proxy.conf /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # copy certificates
 RUN mkdir /etc/nginx/cert
 COPY mm-cert.pem /etc/nginx/cert/mm-cert.pem
 COPY mm-cert-key.pem /etc/nginx/cert/mm-cert-key.pem
-RUN chmod 600 /etc/nginx/cert/mm-cert.pem /etc/nginx/cert/mm-cert-key.pem
 
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx  && chmod -R g+w /etc/nginx
@@ -24,9 +22,6 @@ EXPOSE 8443
 
 # swith user
 USER 2000
-
-# test nginx config
-CMD ["/bin/sh", "-c", "exec nginx -t"]
 
 # start nginx
 CMD ["/bin/sh", "-c", "exec nginx -g 'daemon off;';"]
