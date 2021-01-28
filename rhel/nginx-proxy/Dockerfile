@@ -3,14 +3,16 @@ FROM nginx:1.18.0-alpine-perl
 # add module
 RUN apk add --no-cache nginx-mod-http-perl
 
-# remove default configuration file
+# remove default configuration files
 RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/nginx.conf
 
 # create directory for certificates
 RUN mkdir /etc/nginx/cert
 
 # deploy specific nginx configuration file
 COPY mm-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # support running as arbitrary user which belogs to the root group
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx  && chmod -R g+w /etc/nginx
