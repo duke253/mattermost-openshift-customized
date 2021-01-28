@@ -13,6 +13,6 @@ COPY mm-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
 RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx  && chmod -R g+w /etc/nginx
 
 # output port
-EXPOSE 8080
+EXPOSE 8443
 
 USER 2000
