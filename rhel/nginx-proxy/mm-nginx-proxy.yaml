@@ -9,8 +9,6 @@ objects:
   metadata:
     name: nginx
   spec:
-    selector:
-      deploymentconfig: nginx
     replicas: 1
     securityContext: {}
     template:
