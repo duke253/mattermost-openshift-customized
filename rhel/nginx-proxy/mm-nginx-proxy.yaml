@@ -10,8 +10,6 @@ objects:
     name: nginx
   spec:
     selector:
-      app: nginx
-      deploymentconfig: nginx
       name: nginx
     strategy:
       activeDeadlineSeconds: 21600
