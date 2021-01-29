@@ -7,21 +7,21 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}'
+    name: nginx
   spec:
     selector:
-      name: '${APPLICATION_NAME}'
+      name: nginx
     replicas: 1
     securityContext: {}
     template:
       metadata:
         labels:
-          name: '${APPLICATION_NAME}'
+          name: nginx
   spec:
     containers:
     - image: quay.io/duke253/nginx-openshift-customized:1.1
       imagePullPolicy: Always
-      name: '${APPLICATION_NAME}'
+      name: nginx
       ports:
       - containerPort: 8080
         protocol: TCP
@@ -66,7 +66,7 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}'
+    name: nginx
   spec:
     ports:
     - name: 8080-tcp
@@ -74,11 +74,11 @@ objects:
       protocol: TCP
       targetPort: 8080
     selector:
-      deploymentconfig: '${APPLICATION_NAME}'
+      deploymentconfig: nginx
 - kind: Service
   apiVersion: v1
   metadata:
-    name: secure-'${APPLICATION_NAME}'
+    name: secure-nginx
   spec:
     ports:
     - name: 8443-tcp
@@ -86,32 +86,28 @@ objects:
       protocol: TCP
       targetPort: 8443
     selector:
-      deploymentconfig: '${APPLICATION_NAME}'
+      deploymentconfig: nginx
 - kind: Route
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}'
+    name: nginx
   spec:
-    host: ${HOSTNAME_HTTP}
+    host:
     to:
       kind: Service
-      name: '${APPLICATION_NAME}'
+      name: nginx
     port:
       targetPort: 8080-tcp
 - kind: Route
   apiVersion: v1
   metadata:
-    name: secure-'${APPLICATION_NAME}'
+    name: secure-nginx
   spec:
-    host: ${HOSTNAME_HTTPS}
+    host:
     tls:
       termination: passthrough
     to:
       kind: Service
-      name: secure-'${APPLICATION_NAME}'
+      name: secure-nginx
     port:
       targetPort: 8443-tcp
-parameters:
-- name: APPLICATION_NAME
-  required: true
-  value: nginx
