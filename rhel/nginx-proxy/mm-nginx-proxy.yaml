@@ -10,7 +10,7 @@ objects:
     name: nginx
   spec:
     selector:
-      name: nginx
+      deploymentconfig: nginx
     replicas: 1
     securityContext: {}
     template:
