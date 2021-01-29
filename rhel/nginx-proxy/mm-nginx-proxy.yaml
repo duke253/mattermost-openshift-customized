@@ -110,3 +110,7 @@ metadata:
       name: secure-'${APPLICATION_NAME}'
     port:
       targetPort: 8443-tcp
+parameters:
+- name: APPLICATION_NAME
+  required: true
+  value: nginx
