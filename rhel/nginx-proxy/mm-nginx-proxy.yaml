@@ -31,20 +31,20 @@ objects:
             failureThreshold: 3
             httpGet:
                 path: /
-                port: 8080
-                scheme: HTTP
+                port: 8443
+                scheme: HTTPS
                 periodSeconds: 60
                 successThreshold: 1
                 timeoutSeconds: 10
             ports:
-            - containerPort: 8080
+            - containerPort: 8443
               protocol: TCP
           readinessProbe:
             failureThreshold: 3
             httpGet:
                 path: /
                 port: 8065
-                scheme: HTTP
+                scheme: HTTPS
                 initialDelaySeconds: 60
                 periodSeconds: 60
                 successThreshold: 1
@@ -92,7 +92,7 @@ objects:
   metadata:
     name: nginx
   spec:
-    host:
+    host: mattermost.duke253.ru
     to:
       kind: Service
       name: nginx
@@ -103,7 +103,7 @@ objects:
   metadata:
     name: secure-nginx
   spec:
-    host:
+    host: mattermost.duke253.ru
     tls:
       termination: passthrough
     to:
