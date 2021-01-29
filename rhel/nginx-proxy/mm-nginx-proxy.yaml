@@ -10,7 +10,12 @@ objects:
     name: nginx
   spec:
     selector:
+      app: nginx
+      deploymentconfig: nginx
       name: nginx
+    strategy:
+      activeDeadlineSeconds: 21600
+      type: Recreate
     replicas: 1
     securityContext: {}
     template:
@@ -27,6 +32,11 @@ objects:
             protocol: TCP
           - containerPort: 8443
             protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/nginx/certs
+            name: nginx-certs
+          - mountPath: /etc/nginx/conf.d
+            name: nginx-certs
           livenessProbe:
             failureThreshold: 3
             tcpSocket:
@@ -53,6 +63,15 @@ objects:
         schedulerName: default-scheduler
         securityContext: {}
         terminationGracePeriodSeconds: 30
+        volumes:
+        - name: nginx-certs
+          secret:
+            defaultMode: 420
+            secretName: nginx-certs
+        - name: nginx-config
+          secret:
+            defaultMode: 420
+            secretName: nginx-certs
 - kind: Service
   apiVersion: v1
   metadata:
@@ -82,7 +101,7 @@ objects:
   metadata:
     name: nginx
   spec:
-    host: mattermost.duke253.ru
+    host:
     to:
       kind: Service
       name: nginx
@@ -93,7 +112,7 @@ objects:
   metadata:
     name: secure-nginx
   spec:
-    host: mattermost.duke253.ru
+    host:
     tls:
       termination: passthrough
     to:
