@@ -34,7 +34,7 @@ objects:
           - mountPath: /etc/nginx/certs
             name: nginx-certs
           - mountPath: /etc/nginx/conf.d
-            name: nginx-certs
+            name: nginx-config
           livenessProbe:
             failureThreshold: 3
             tcpSocket:
@@ -69,7 +69,7 @@ objects:
         - name: nginx-config
           secret:
             defaultMode: 420
-            secretName: nginx-certs
+            secretName: nginx-config
 - kind: Service
   apiVersion: v1
   metadata:
