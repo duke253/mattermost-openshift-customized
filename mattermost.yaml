@@ -29,10 +29,10 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: A-'${APPLICATION_NAME}'
+    name: '${APPLICATION_NAME}-1'
   spec:
     selector:
-      name: A-'${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}-1'
     replicas: 1
     securityContext: {}
     serviceAccount: mattermost
@@ -40,7 +40,7 @@ objects:
     template:
       metadata:
         labels:
-          name: A-'${APPLICATION_NAME}'
+          name: '${APPLICATION_NAME}-1'
       spec:
         containers:
         - image: quay.io/duke253/mattermost-openshift-customized:1.13
@@ -134,7 +134,7 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: A-'${APPLICATION_NAME}'
+    name: '${APPLICATION_NAME}-1'
   spec:
     ports:
     - name: 8065-tcp
@@ -142,11 +142,11 @@ objects:
       protocol: TCP
       targetPort: 8065
     selector:
-      deploymentconfig: A-'${APPLICATION_NAME}'
+      deploymentconfig: '${APPLICATION_NAME}-1'
 - kind: ConfigMap
   apiVersion: v1
   metadata:
-    name: A-'${APPLICATION_NAME}'
+    name: '${APPLICATION_NAME}-1'
   data:
     db_database: '${POSTGRESQL_DATABASE}'
     db_host: 178.154.233.162
