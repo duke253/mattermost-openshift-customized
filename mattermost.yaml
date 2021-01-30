@@ -8,7 +8,7 @@ message: |-
             Password: from secret `mattermost`
        Database Name: ${POSTGRESQL_DATABASE}
 metadata:
-  name: mattermost
+  name: mattermost-1
   annotations:
     description: |-
       Community template for running Mattermost Team Edition on Openshift (Origin)
@@ -29,18 +29,18 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}'
+    name: '${APPLICATION_NAME}'-1
   spec:
     selector:
-      name: '${APPLICATION_NAME}'
-    replicas: 2
+      name: '${APPLICATION_NAME}'-1
+    replicas: 1
     securityContext: {}
     serviceAccount: mattermost
     serviceAccountName: mattermost
     template:
       metadata:
         labels:
-          name: '${APPLICATION_NAME}'
+          name: '${APPLICATION_NAME}'-1
       spec:
         containers:
         - image: quay.io/duke253/mattermost-openshift-customized:1.13
@@ -134,7 +134,7 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}'
+    name: '${APPLICATION_NAME}'-1
   spec:
     ports:
     - name: 8065-tcp
@@ -142,18 +142,7 @@ objects:
       protocol: TCP
       targetPort: 8065
     selector:
-      deploymentconfig: '${APPLICATION_NAME}'
-- kind: Route
-  apiVersion: v1
-  metadata:
-    name: '${APPLICATION_NAME}'
-  spec:
-    host: 
-    to:
-      kind: Service
-      name: '${APPLICATION_NAME}'
-    port:
-      targetPort: 8065-tcp
+      deploymentconfig: '${APPLICATION_NAME}'-1
 - kind: ConfigMap
   apiVersion: v1
   metadata:
