@@ -13,20 +13,6 @@ objects:
   kind: Service
   metadata:
     annotations:
-      description: The web server's http port.
-    labels:
-      application: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
-  spec:
-    ports:
-    - port: 8080
-      targetPort: 8080
-    selector:
-      deploymentConfig: ${APPLICATION_NAME}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
       description: The web server's https port.
     labels:
       application: ${APPLICATION_NAME}
@@ -37,19 +23,6 @@ objects:
       targetPort: 8443
     selector:
       deploymentConfig: ${APPLICATION_NAME}
-- apiVersion: v1
-  id: ${APPLICATION_NAME}-http
-  kind: Route
-  metadata:
-    annotations:
-      description: Route for application's http service.
-    labels:
-      application: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
-  spec:
-    host: ${HOSTNAME_HTTP}
-    to:
-      name: ${APPLICATION_NAME}
 - apiVersion: v1
   id: ${APPLICATION_NAME}-https
   kind: Route

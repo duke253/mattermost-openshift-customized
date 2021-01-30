@@ -1,0 +1,190 @@
+apiVersion: v1
+kind: Template
+message: |-
+  The following service(s) have been created in your project: ${APPLICATION_NAME}.
+
+  Mattermost Version: ${MATTERMOST_VERSION}
+       Database User: from secret `mattermost`
+            Password: from secret `mattermost`
+       Database Name: ${POSTGRESQL_DATABASE}
+metadata:
+  name: mattermost-1
+  annotations:
+    description: |-
+      Community template for running Mattermost Team Edition on Openshift (Origin)
+      
+      https://about.mattermost.com
+
+      You need a running PostgreSQL server running and a secret with username/password configured.
+ 
+    openshift.io/display-name: Mattermost
+    tags: mattermost
+    iconClass: fa fa-comments
+    template.openshift.io/documentation-url: https://github.com/duke253/mattermost-openshift-customized/blob/main/README.md
+    template.openshift.io/long-description: This template provides a Mattermost service, it depends on a Secret and PostgreSQL.
+    template.openshift.io/provider-display-name: Mattermost Community
+    template.openshift.io/support-url: https://github.com/duke253/mattermost-openshift-customized/issues
+
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: '${APPLICATION_NAME}-2'
+  spec:
+    selector:
+      name: '${APPLICATION_NAME}-2'
+    replicas: 1
+    securityContext: {}
+    serviceAccount: mattermost
+    serviceAccountName: mattermost
+    template:
+      metadata:
+        labels:
+          name: '${APPLICATION_NAME}-2'
+      spec:
+        containers:
+        - image: quay.io/duke253/mattermost-openshift-customized:1.13
+          imagePullPolicy: Always
+          name: '${APPLICATION_NAME}'
+          env:
+          - name: DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: mattermost-database
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: mattermost-database
+          - name: MM_GITLAB_ID
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: mattermost-gitlab
+          - name: MM_GITLAB_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: mattermost-gitlab
+          - name: S3_KEY
+            valueFrom:
+              secretKeyRef:
+                key: user
+                name: mattermost-s3
+          - name: S3_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: mattermost-s3
+          - name: DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                key: db_database
+                name: mattermost
+          - name: DB_HOST
+            valueFrom:
+              configMapKeyRef:
+                key: db_host
+                name: mattermost
+          - name: DB_PORT
+            valueFrom:
+              configMapKeyRef:
+                key: db_port
+                name: mattermost
+          - name: S3_BUCKET
+            value: ${S3_BUCKET}
+          - name: S3_URL
+            value: ${S3_URL}
+          - name: GITLAB_AUTHENDPOINT
+            value: ${GITLAB_AUTHENDPOINT}
+          - name: GITLAB_TOKENENDPOINT
+            value: ${GITLAB_TOKENENDPOINT}
+          - name: GITLAB_USERAPIENAPOINT
+            value: ${GITLAB_USERAPIENAPOINT}
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8065
+              scheme: HTTP
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+          ports:
+          - containerPort: 8065
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8065
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 10
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1Gi
+            requests:
+              cpu: 250m
+              memory: 128Mi
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: '${APPLICATION_NAME}-2'
+  spec:
+    ports:
+    - name: 8065-tcp
+      port: 8065
+      protocol: TCP
+      targetPort: 8065
+    selector:
+      deploymentconfig: '${APPLICATION_NAME}-2'
+- kind: ConfigMap
+  apiVersion: v1
+  metadata:
+    name: '${APPLICATION_NAME}-2'
+  data:
+    db_database: '${POSTGRESQL_DATABASE}'
+    db_host: 178.154.233.162
+    db_port: '5432'
+parameters:
+- name: APPLICATION_NAME
+  required: true
+  value: mattermost
+- name: MATTERMOST_VERSION
+  required: true
+  value: '5.29.0'
+- description: Name of the PostgreSQL database accessed.
+  displayName: PostgreSQL Database Name
+  name: POSTGRESQL_DATABASE
+  required: true
+  value: mattermostdb02
+- description: S3 BUCKET
+  displayName: S3 bucket
+  name: S3_BUCKET
+  required: true
+  value: mm-data
+- description: S3 URL
+  displayName: S3 URL
+  name: S3_URL
+  required: true
+  value: 130.193.58.121:9000
+- description: GITLAB AUTHENDPOINT
+  displayName: GITLAB AuthEndpoint
+  name: GITLAB_AUTHENDPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/auth
+- description: GITLAB TOKENENDPOINT
+  displayName: GITLAB TokenEndpoint
+  name: GITLAB_TOKENENDPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/token
+- description: GITLAB USERAPIENAPOINT
+  displayName: GITLAB UserApiEndpoint
+  name: GITLAB_USERAPIENAPOINT
+  required: true
+  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/userinfo
