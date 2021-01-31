@@ -96,7 +96,7 @@ objects:
               path: /auth/realms/master
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 180
+            initialDelaySeconds: 360
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 8080
