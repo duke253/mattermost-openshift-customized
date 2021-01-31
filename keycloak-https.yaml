@@ -45,7 +45,7 @@ objects:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
   spec:
-    replicas: 1
+    replicas: 2
     selector:
       deploymentConfig: ${APPLICATION_NAME}
     strategy:
@@ -74,7 +74,7 @@ objects:
           - name: JGROUPS_DISCOVERY_PROTOCOL
             value: dns.DNS_PING
           - name: JGROUPS_DISCOVERY_PROPERTIES
-            value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
+            value: dns_query=secure-${APPLICATION_NAME}.${NAMESPACE}.apps.duke253.ru
           - name: DB_ADDR
             value: ${DB_ADDR}
           - name: DB_USER
