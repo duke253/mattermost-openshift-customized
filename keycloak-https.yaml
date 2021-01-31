@@ -74,7 +74,7 @@ objects:
           - name: JGROUPS_DISCOVERY_PROTOCOL
             value: dns.DNS_PING
           - name: JGROUPS_DISCOVERY_PROPERTIES
-            value: dns_query=secure-${APPLICATION_NAME}.${NAMESPACE}.apps.duke253.ru
+            value: dns_query=secure-${APPLICATION_NAME}.${NAMESPACE}.svc
           - name: DB_ADDR
             value: ${DB_ADDR}
           - name: DB_USER
