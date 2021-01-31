@@ -45,7 +45,7 @@ objects:
       application: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
   spec:
-    replicas: 2
+    replicas: 1
     selector:
       deploymentConfig: ${APPLICATION_NAME}
     strategy:
@@ -74,7 +74,7 @@ objects:
           - name: JGROUPS_DISCOVERY_PROTOCOL
             value: dns.DNS_PING
           - name: JGROUPS_DISCOVERY_PROPERTIES
-            value: dns_query=secure-${APPLICATION_NAME}.${NAMESPACE}.svc
+            value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
           - name: DB_ADDR
             value: ${DB_ADDR}
           - name: DB_USER
@@ -96,7 +96,7 @@ objects:
               path: /auth/realms/master
               port: 8080
               scheme: HTTP
-            initialDelaySeconds: 360
+            initialDelaySeconds: 180
           name: ${APPLICATION_NAME}
           ports:
           - containerPort: 8080
