@@ -29,10 +29,10 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-1'
+    name: '${APPLICATION_NAME}-2'
   spec:
     selector:
-      name: '${APPLICATION_NAME}-1'
+      name: '${APPLICATION_NAME}-2'
     replicas: 1
     securityContext: {}
     serviceAccount: mattermost
@@ -40,7 +40,7 @@ objects:
     template:
       metadata:
         labels:
-          name: '${APPLICATION_NAME}-1'
+          name: '${APPLICATION_NAME}-2'
       spec:
         containers:
         - image: quay.io/duke253/mattermost-openshift-customized:1.14
@@ -81,17 +81,17 @@ objects:
             valueFrom:
               configMapKeyRef:
                 key: db_database
-                name: mattermost-1
+                name: mattermost-2
           - name: DB_HOST
             valueFrom:
               configMapKeyRef:
                 key: db_host
-                name: mattermost-1
+                name: mattermost-2
           - name: DB_PORT
             valueFrom:
               configMapKeyRef:
                 key: db_port
-                name: mattermost-1
+                name: mattermost-2
           - name: S3_BUCKET
             value: ${S3_BUCKET}
           - name: S3_URL
@@ -146,7 +146,7 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-1'
+    name: '${APPLICATION_NAME}-2'
   spec:
     ports:
     - name: 8065-tcp
@@ -154,11 +154,11 @@ objects:
       protocol: TCP
       targetPort: 8065
     selector:
-      deploymentconfig: '${APPLICATION_NAME}-1'
+      deploymentconfig: '${APPLICATION_NAME}-2'
 - kind: ConfigMap
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-1'
+    name: '${APPLICATION_NAME}-2'
   data:
     db_database: '${POSTGRESQL_DATABASE}'
     db_host: 178.154.233.162
