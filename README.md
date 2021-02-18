@@ -65,7 +65,7 @@ oc create secret generic mattermost-s3 \
 --from-literal=password=%Secret_Access_Key%
 ```
 create new secret with certificate for S3
-**Note:** Place your certificate and private key in ./s3-cert.
+**Note:** Place your CA certificate for S3 in ./s3-cert.
 ```
 cd ./s3-cert
 oc create secret generic s3-certs --from-file=./s3-cert
