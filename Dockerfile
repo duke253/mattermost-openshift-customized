@@ -31,7 +31,7 @@ RUN cd /opt && \
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
 
 # S3 certificate
-COPY certificate.crt /etc/pki/ca-trust/source/anchors
+COPY public.crt /etc/pki/ca-trust/source/anchors
 RUN update-ca-trust
 RUN update-ca-trust enabled
 RUN update-ca-trust extract
