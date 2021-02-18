@@ -196,7 +196,7 @@ parameters:
   displayName: S3 URL
   name: S3_URL
   required: true
-  value: 130.193.58.121:9000
+  value: minio-s3.duke253.ru:9000
 - description: GITLAB AUTHENDPOINT
   displayName: GITLAB AuthEndpoint
   name: GITLAB_AUTHENDPOINT
