@@ -58,18 +58,26 @@ oc create secret generic mattermost-gitlab \
 --from-literal=user=%Client_ID% \
 --from-literal=password=%Client_Secret%
 ```
-create new secret for Minio (S3)
+create new secret for S3 (Minio)
 ```
 oc create secret generic mattermost-s3 \
 --from-literal=user=%Access_Key_ID% \
 --from-literal=password=%Secret_Access_Key%
 ```
+create new secret with certificate for S3
+**Note:** Place your certificate and private key in ./s3-cert.
+```
+cd ./s3-cert
+oc create secret generic s3-certs --from-file=./s3-cert
+```
+
 
 link secret to service account
 ```
 oc secrets link mattermost mattermost-database
 oc secrets link mattermost mattermost-gitlab
 oc secrets link mattermost mattermost-s3
+oc secrets link mattermost s3-certs
 ```
 
 create template for first Mattermost instance
