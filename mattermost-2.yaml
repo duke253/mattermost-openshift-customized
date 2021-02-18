@@ -8,7 +8,7 @@ message: |-
             Password: from secret `mattermost`
        Database Name: ${POSTGRESQL_DATABASE}
 metadata:
-  name: mattermost-2
+  name: mattermost-1
   annotations:
     description: |-
       Community template for running Mattermost Team Edition on Openshift (Origin)
@@ -29,10 +29,10 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-2'
+    name: '${APPLICATION_NAME}-1'
   spec:
     selector:
-      name: '${APPLICATION_NAME}-2'
+      name: '${APPLICATION_NAME}-1'
     replicas: 1
     securityContext: {}
     serviceAccount: mattermost
@@ -40,7 +40,7 @@ objects:
     template:
       metadata:
         labels:
-          name: '${APPLICATION_NAME}-2'
+          name: '${APPLICATION_NAME}-1'
       spec:
         containers:
         - image: quay.io/duke253/mattermost-openshift-customized:1.13
@@ -81,17 +81,17 @@ objects:
             valueFrom:
               configMapKeyRef:
                 key: db_database
-                name: mattermost-2
+                name: mattermost-1
           - name: DB_HOST
             valueFrom:
               configMapKeyRef:
                 key: db_host
-                name: mattermost-2
+                name: mattermost-1
           - name: DB_PORT
             valueFrom:
               configMapKeyRef:
                 key: db_port
-                name: mattermost-2
+                name: mattermost-1
           - name: S3_BUCKET
             value: ${S3_BUCKET}
           - name: S3_URL
@@ -102,6 +102,10 @@ objects:
             value: ${GITLAB_TOKENENDPOINT}
           - name: GITLAB_USERAPIENAPOINT
             value: ${GITLAB_USERAPIENAPOINT}
+          - name: MPNS_URL
+            value: ${MPNS_URL}
+          - name: PUSH_CONTENT_MODE
+            value: ${PUSH_CONTENT_MODE}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -131,10 +135,18 @@ objects:
             requests:
               cpu: 250m
               memory: 128Mi
+          volumeMounts:
+          - mountPath: /etc/pki/ca-trust/source/anchors
+            name: s3-certs
+        volumes:
+        - name: s3-certs
+          secret:
+            defaultMode: 420
+            secretName: s3-certs
 - kind: Service
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-2'
+    name: '${APPLICATION_NAME}-1'
   spec:
     ports:
     - name: 8065-tcp
@@ -142,11 +154,11 @@ objects:
       protocol: TCP
       targetPort: 8065
     selector:
-      deploymentconfig: '${APPLICATION_NAME}-2'
+      deploymentconfig: '${APPLICATION_NAME}-1'
 - kind: ConfigMap
   apiVersion: v1
   metadata:
-    name: '${APPLICATION_NAME}-2'
+    name: '${APPLICATION_NAME}-1'
   data:
     db_database: '${POSTGRESQL_DATABASE}'
     db_host: 178.154.233.162
@@ -168,6 +180,16 @@ parameters:
   name: S3_BUCKET
   required: true
   value: mm-data
+- description: MPNS URL
+  displayName: MPNS url
+  name: MPNS_URL
+  required: true
+  value: https://secure-nginx-mattermost.apps.duke253.ru
+- description: PUSH CONTENT MODE
+  displayName: Push Content Mode
+  name: PUSH_CONTENT_MODE
+  required: true
+  value: full
 - description: S3 URL
   displayName: S3 URL
   name: S3_URL

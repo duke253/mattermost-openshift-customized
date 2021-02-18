@@ -12,18 +12,29 @@ LABEL io.k8s.description="Mattermost is an open source, self-hosted Slack-altern
       io.openshift.tags="mattermost,slack"
 
 # Install some needed packages for MM
-RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &&\
-	yum -y install jq &&\
+RUN cd /opt &&\
+	yum -y install wget &&\
+	wget https://dl.fedoraproject.org/pub/epel/7Server/x86_64/Packages/o/oniguruma-6.8.2-1.el7.x86_64.rpm &&\
+	wget https://dl.fedoraproject.org/pub/epel/7Server/x86_64/Packages/j/jq-1.6-2.el7.x86_64.rpm &&\
+	rpm -ihv oniguruma-6.8.2-1.el7.x86_64.rpm &&\
+	rpm -ihv jq-1.6-2.el7.x86_64.rpm &&\
 	yum -y install kernel-headers &&\
 	yum -y install mailcap &&\
 	yum -y install nmap-ncat &&\
 	yum -y install xmlsec1 &&\
-	yum clean all -y
+	yum clean all -y &&\
+	rm -rf /opt/*
 
 RUN cd /opt && \
     curl -LO -v https://releases.mattermost.com/${MATTERMOST_VERSION}/mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz && \
     tar xf mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz &&\
     rm mattermost-team-${MATTERMOST_VERSION}-linux-amd64.tar.gz
+
+# S3 certificate
+COPY certificate.crt /etc/pki/ca-trust/source/anchors
+RUN update-ca-trust
+RUN update-ca-trust enabled
+RUN update-ca-trust extract
 
 COPY config.json /opt/mattermost/config/config.json
 

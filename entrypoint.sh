@@ -21,10 +21,11 @@ S3_KEY=${S3_KEY:-none}
 S3_SECRET=${S3_SECRET:-none}
 S3_BUCKET=${S3_BUCKET:-none}
 S3_URL=${S3_URL:-none}
-
 GITLAB_AUTHENDPOINT=${GITLAB_AUTHENDPOINT:-none}
 GITLAB_TOKENENDPOINT=${GITLAB_TOKENENDPOINT:-none}
 GITLAB_USERAPIENAPOINT=${GITLAB_USERAPIENAPOINT:-none}
+MPNS_URL=${MPNS_URL:-none}
+PUSH_CONTENT_MODE=${PUSH_CONTENT_MODE:-none}
 
 echo $DB_HOST
 echo $DB_PORT
@@ -41,6 +42,8 @@ echo $S3_URL
 echo $GITLAB_AUTHENDPOINT
 echo $GITLAB_TOKENENDPOINT
 echo $GITLAB_USERAPIENAPOINT
+echo $MPNS_URL
+echo $PUSH_CONTENT_MODE
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
@@ -64,10 +67,17 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.FileSettings.AmazonS3PathPrefix = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3Region = ""' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3Endpoint = "'$S3_URL'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-	jq '.FileSettings.AmazonS3SSL = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.FileSettings.AmazonS3SSL = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SignV2 = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SSE = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3Trace = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.EnableSignUpWithEmail = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.EnableSignInWithEmail = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.EnableSignInWithUsername = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.SendPushNotifications = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.PushNotificationServer = "'$MPNS_URL'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.EmailSettings.PushNotificationContents = "'$PUSH_CONTENT_MODE'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+
 	
 	echo "done"
 else

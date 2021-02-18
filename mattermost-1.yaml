@@ -102,6 +102,12 @@ objects:
             value: ${GITLAB_TOKENENDPOINT}
           - name: GITLAB_USERAPIENAPOINT
             value: ${GITLAB_USERAPIENAPOINT}
+          - name: S3_BUCKET
+            value: ${S3_BUCKET}
+          - name: MPNS_URL
+            value: ${MPNS_URL}
+          - name: PUSH_CONTENT_MODE
+            value: ${PUSH_CONTENT_MODE}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -131,6 +137,14 @@ objects:
             requests:
               cpu: 250m
               memory: 128Mi
+          volumeMounts:
+          - mountPath: /etc/pki/ca-trust/source/anchors
+            name: s3-certs
+        volumes:
+        - name: s3-certs
+          secret:
+            defaultMode: 420
+            secretName: s3-certs
 - kind: Service
   apiVersion: v1
   metadata:
@@ -168,6 +182,16 @@ parameters:
   name: S3_BUCKET
   required: true
   value: mm-data
+- description: MPNS URL
+  displayName: MPNS url
+  name: MPNS_URL
+  required: true
+  value: https://secure-nginx-mattermost.apps.duke253.ru
+- description: PUSH CONTENT MODE
+  displayName: Push Content Mode
+  name: PUSH_CONTENT_MODE
+  required: true
+  value: full
 - description: S3 URL
   displayName: S3 URL
   name: S3_URL
