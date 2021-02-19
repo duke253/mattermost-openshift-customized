@@ -155,8 +155,7 @@ objects:
             name: mm-logs
             readOnly: true
           - mountPath: /etc/filebeat
-            name: filebeat-config-volume
-            readOnly: true
+            name: filebeat-config
         volumes:
         - name: s3-certs
           secret:
@@ -164,10 +163,10 @@ objects:
             secretName: s3-certs
         - name: mm-logs
           emptyDir: {}
-        - name: filebeat-config-volume
+        - name: filebeat-config
           secret:
-            name: filebeat-config
             defaultMode: 420
+            name: filebeat-config
 - kind: Service
   apiVersion: v1
   metadata:
