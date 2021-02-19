@@ -150,6 +150,7 @@ objects:
           volumeMounts:
           - mountPath: /opt/mattermost/logs
             name: mm-logs
+            readOnly: true
           - mountPath: /etc/filebeat/config
             name: filebeat-config-volume
             readOnly: true
@@ -190,16 +191,15 @@ objects:
   data:
     filebeat.yml: |
       output:
-  logstash:
-    enabled: true
-    hosts:
-      - minio-s3.duke253.ru:5044
-    timeout: 15
-filebeat:
-  inputs:
-    -
-      paths:
-        - /opt/mattermost/logs/mattermost.log
+        logstash:
+          enabled: true
+          hosts:
+            - minio-s3.duke253.ru:5044
+          timeout: 15
+      inputs:
+      - input_type: log
+        paths:
+          - /opt/mattermost/logs/mattermost.log
 parameters:
 - name: APPLICATION_NAME
   required: true
