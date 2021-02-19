@@ -142,6 +142,7 @@ objects:
             name: mm-logs
         - image: docker.elastic.co/beats/filebeat:7.11.1
           args: [
+            "-d", "'"*"'",
             "-e",
             "-c", "/etc/filebeat/filebeat.yml",
             "--strict.perms=false"
