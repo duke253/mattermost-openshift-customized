@@ -165,8 +165,9 @@ objects:
         - name: mm-logs
           emptyDir: {}
         - name: filebeat-config-volume
-          configMap:
+          secret:
             name: filebeat-config
+            defaultMode: 420
 - kind: Service
   apiVersion: v1
   metadata:
