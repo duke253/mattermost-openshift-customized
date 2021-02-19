@@ -151,7 +151,7 @@ objects:
           - mountPath: /opt/mattermost/logs
             name: mm-logs
             readOnly: true
-          - mountPath: /usr/share/filebeat
+          - mountPath: /usr/share/filebeat/filebeat.yml
             name: filebeat-config-volume
             readOnly: true
         volumes:
