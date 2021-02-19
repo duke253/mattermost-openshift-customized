@@ -192,14 +192,15 @@ objects:
   metadata:
     name: filebeat-config
   data:
-    filebeat.yml: |
-      filebeat.config: 
-        inputs: 
-          paths: /opt/mattermost/logs/mattermost.log
-        output.logstash: 
-          enabled: true
+    filebeat.yml: | 
+      inputs: 
+        paths: /opt/mattermost/logs/mattermost.log
+      output:
+        logstash: 
           hosts: minio-s3.duke253.ru:5044
           timeout: 15
+        console:
+          pretty: true
 parameters:
 - name: APPLICATION_NAME
   required: true
