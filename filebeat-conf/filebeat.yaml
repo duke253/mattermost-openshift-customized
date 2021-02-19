@@ -1,0 +1,8 @@
+filebeat.inputs:
+- type: log
+  paths:
+    - /opt/mattermost/logs/mattermost.log
+output.logstash:
+  hosts: ["minio-s3.duke253.ru:5044"]
+output.console:
+  pretty: true
