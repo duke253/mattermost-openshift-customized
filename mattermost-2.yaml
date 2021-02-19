@@ -166,7 +166,7 @@ objects:
         - name: filebeat-config
           secret:
             defaultMode: 420
-            name: filebeat-config
+            secretName: filebeat-config
 - kind: Service
   apiVersion: v1
   metadata:
