@@ -141,9 +141,6 @@ objects:
           - mountPath: /opt/mattermost/logs
             name: mm-logs
         - image: docker.elastic.co/beats/filebeat:7.11.1
-          args: [
-            "-c", "/etc/filebeat/filebeat.yml"
-          ]
           imagePullPolicy: Always
           name: mm-filebeat
           resources:
@@ -154,8 +151,6 @@ objects:
           - mountPath: /opt/mattermost/logs
             name: mm-logs
             readOnly: true
-          - mountPath: /etc/filebeat
-            name: filebeat-config
         volumes:
         - name: s3-certs
           secret:
@@ -163,10 +158,6 @@ objects:
             secretName: s3-certs
         - name: mm-logs
           emptyDir: {}
-        - name: filebeat-config
-          secret:
-            defaultMode: 420
-            secretName: filebeat-config
 - kind: Service
   apiVersion: v1
   metadata:
