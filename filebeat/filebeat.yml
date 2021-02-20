@@ -2,5 +2,8 @@ filebeat.inputs:
 - type: log
   paths:
     - /opt/mattermost/logs/mattermost.log
+- type: container
+  paths:
+    - '/var/log/nginx/*.log'
 output.logstash:
   hosts: ["minio-s3.duke253.ru:5044"]
