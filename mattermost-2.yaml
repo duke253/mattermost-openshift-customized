@@ -142,7 +142,7 @@ objects:
             name: mm-logs-2
         - image: quay.io/duke253/filebeat-customized:1.0
           imagePullPolicy: Always
-          name: mm-filebeat
+          name: mm-filebeat-2
           resources:
             limits:
               cpu: 200m
