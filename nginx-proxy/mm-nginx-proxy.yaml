@@ -35,6 +35,8 @@ objects:
             name: nginx-certs
           - mountPath: /etc/nginx/conf.d
             name: nginx-config
+          - mountPath: /var/log/nginx
+            name: ng-logs
           livenessProbe:
             failureThreshold: 3
             tcpSocket:
@@ -56,6 +58,17 @@ objects:
               memory: 512Mi
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
+        - image: quay.io/duke253/filebeat-customized:1.2
+          imagePullPolicy: Always
+          name: ng-filebeat-1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+          - mountPath: /var/log/nginx
+            name: ng-logs
+            readOnly: true
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -70,6 +83,8 @@ objects:
           secret:
             defaultMode: 420
             secretName: nginx-config
+        - name: ng-logs
+          emptyDir: {}
 - kind: Service
   apiVersion: v1
   metadata:
