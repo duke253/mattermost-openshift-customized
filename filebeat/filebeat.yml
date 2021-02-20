@@ -2,5 +2,6 @@ filebeat.inputs:
 - type: log
   paths:
     - /opt/mattermost/logs/mattermost.log
+  json.keys_under_root: true
 output.logstash:
   hosts: ["minio-s3.duke253.ru:5044"]
