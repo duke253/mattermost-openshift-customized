@@ -102,8 +102,6 @@ objects:
             value: ${GITLAB_TOKENENDPOINT}
           - name: GITLAB_USERAPIENAPOINT
             value: ${GITLAB_USERAPIENAPOINT}
-          - name: S3_BUCKET
-            value: ${S3_BUCKET}
           - name: MPNS_URL
             value: ${MPNS_URL}
           - name: PUSH_CONTENT_MODE
@@ -140,11 +138,26 @@ objects:
           volumeMounts:
           - mountPath: /etc/pki/ca-trust/source/anchors
             name: s3-certs
+          - mountPath: /opt/mattermost/logs
+            name: mm-logs-1
+        - image: quay.io/duke253/filebeat-customized:1.0
+          imagePullPolicy: Always
+          name: mm-filebeat-1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+          - mountPath: /opt/mattermost/logs
+            name: mm-logs-1
+            readOnly: true
         volumes:
         - name: s3-certs
           secret:
             defaultMode: 420
             secretName: s3-certs
+        - name: mm-logs-1
+          emptyDir: {}
 - kind: Service
   apiVersion: v1
   metadata:
@@ -163,7 +176,7 @@ objects:
     name: '${APPLICATION_NAME}-1'
   data:
     db_database: '${POSTGRESQL_DATABASE}'
-    db_host: 178.154.233.162
+    db_host: mm-db.duke253.ru
     db_port: '5432'
 parameters:
 - name: APPLICATION_NAME
@@ -186,7 +199,7 @@ parameters:
   displayName: MPNS url
   name: MPNS_URL
   required: true
-  value: https://secure-nginx-mattermost.apps.duke253.ru
+  value: mpns.duke253.ru:8066
 - description: PUSH CONTENT MODE
   displayName: Push Content Mode
   name: PUSH_CONTENT_MODE
