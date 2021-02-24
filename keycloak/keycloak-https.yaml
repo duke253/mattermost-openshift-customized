@@ -125,8 +125,8 @@ objects:
               memory: 256Mi
           volumeMounts:
           - mountPath: /opt/jboss/keycloak/standalone/log
-          name: kc-logs-1
-          readOnly: true
+            name: kc-logs-1
+            readOnly: true
         volumes:
         - name: kc-logs-1
           emptyDir: {}
