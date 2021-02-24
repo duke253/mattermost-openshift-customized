@@ -116,7 +116,7 @@ objects:
           volumeMounts:
           - mountPath: /opt/jboss/keycloak/standalone/log
             name: kc-logs-1
-        - image: quay.io/duke253/filebeat-customized:1.4
+        - image: quay.io/duke253/filebeat-customized:1.5
           imagePullPolicy: Always
           name: kc-filebeat-1
           resources:

@@ -58,7 +58,7 @@ objects:
               memory: 512Mi
             terminationMessagePath: /dev/termination-log
             terminationMessagePolicy: File
-        - image: quay.io/duke253/filebeat-customized:1.4
+        - image: quay.io/duke253/filebeat-customized:1.5
           imagePullPolicy: Always
           name: ng-filebeat-1
           resources:

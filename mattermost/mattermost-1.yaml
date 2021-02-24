@@ -140,7 +140,7 @@ objects:
             name: s3-certs
           - mountPath: /opt/mattermost/logs
             name: mm-logs-1
-        - image: quay.io/duke253/filebeat-customized:1.4
+        - image: quay.io/duke253/filebeat-customized:1.5
           imagePullPolicy: Always
           name: mm-filebeat-1
           resources:
