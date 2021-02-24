@@ -5,5 +5,8 @@ filebeat.inputs:
 - type: log
   paths:
     - '/var/log/nginx/*.log'
+- type: log
+  paths:
+    - '/opt/jboss/keycloak/standalone/log/*.log'
 output.logstash:
   hosts: ["elk.duke253.ru:5044"]
