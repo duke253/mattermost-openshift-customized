@@ -24,6 +24,21 @@ objects:
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
+  id: ${APPLICATION_NAME}-https
+  kind: Route
+  metadata:
+    annotations:
+      description: Route for application's https service.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: secure-${APPLICATION_NAME}
+  spec:
+    host: ${HOSTNAME_HTTPS}
+    tls:
+      termination: passthrough
+    to:
+      name: secure-${APPLICATION_NAME}
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -43,8 +58,7 @@ objects:
         name: ${APPLICATION_NAME}
       spec:
         containers:
-        - image: quay.io/duke253/keycloak-customized:1.0
-          env:
+        - env:
           - name: KEYCLOAK_USER
             valueFrom:
               secretKeyRef:
@@ -75,6 +89,7 @@ objects:
                 name: keycloak-database
           - name: DB_DATABASE
             value: ${DB_DATABASE}
+          image: quay.io/keycloak/keycloak:12.0.2
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -98,23 +113,6 @@ objects:
             initialDelaySeconds: 360
           securityContext:
             privileged: false
-          volumeMounts:
-          - mountPath: /opt/jboss/keycloak/standalone/log
-            name: kc-logs-1
-        - image: quay.io/duke253/filebeat-customized:1.5
-          imagePullPolicy: Always
-          name: kc-filebeat-1
-          resources:
-            limits:
-              cpu: 200m
-              memory: 256Mi
-          volumeMounts:
-          - mountPath: /opt/jboss/keycloak/standalone/log
-            name: kc-logs-1
-            readOnly: true
-        volumes:
-        - name: kc-logs-1
-          emptyDir: {}
     triggers:
     - type: ConfigChange
 parameters:
