@@ -58,7 +58,8 @@ objects:
         name: ${APPLICATION_NAME}
       spec:
         containers:
-        - env:
+        - image: quay.io/duke253/keycloak-customized:1.0
+          env:
           - name: KEYCLOAK_USER
             valueFrom:
               secretKeyRef:
@@ -89,7 +90,6 @@ objects:
                 name: keycloak-database
           - name: DB_DATABASE
             value: ${DB_DATABASE}
-          image: quay.io/keycloak/keycloak:12.0.2
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -113,6 +113,23 @@ objects:
             initialDelaySeconds: 360
           securityContext:
             privileged: false
+          volumeMounts:
+          - mountPath: /opt/jboss/keycloak/standalone/log
+            name: kc-logs-1
+        - image: quay.io/duke253/filebeat-customized:2.1
+          imagePullPolicy: Always
+          name: kc-filebeat-1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          volumeMounts:
+          - mountPath: /opt/jboss/keycloak/standalone/log
+            name: kc-logs-1
+            readOnly: true
+        volumes:
+        - name: kc-logs-1
+          emptyDir: {}
     triggers:
     - type: ConfigChange
 parameters:
