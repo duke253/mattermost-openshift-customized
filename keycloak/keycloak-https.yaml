@@ -116,6 +116,9 @@ objects:
           volumeMounts:
           - mountPath: /opt/jboss/keycloak/standalone/log
             name: kc-logs-1
+          - mountPath: /etc/x509/https
+            name: keycloak-x509-https-volume
+            readOnly: true
         - image: quay.io/duke253/filebeat-customized:2.1
           imagePullPolicy: Always
           name: kc-filebeat-1
@@ -130,6 +133,10 @@ objects:
         volumes:
         - name: kc-logs-1
           emptyDir: {}
+        - name: keycloak-x509-https-volume
+          secret:
+            defaultMode: 420
+            secretName: keycloak-certs
     triggers:
     - type: ConfigChange
 parameters:
