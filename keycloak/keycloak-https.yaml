@@ -24,33 +24,6 @@ objects:
     selector:
       deploymentConfig: ${APPLICATION_NAME}
 - apiVersion: v1
-  kind: Service
-  metadata:
-    annotations:
-      description: The web server's http port.
-    labels:
-      application: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
-  spec:
-    ports:
-    - port: 8080
-      targetPort: 8080
-    selector:
-      deploymentConfig: ${APPLICATION_NAME}
-- apiVersion: v1
-  id: ${APPLICATION_NAME}-http
-  kind: Route
-  metadata:
-    annotations:
-      description: Route for application's http service.
-    labels:
-      application: ${APPLICATION_NAME}
-    name: ${APPLICATION_NAME}
-  spec:
-    host: ${HOSTNAME_HTTPS}
-    to:
-      name: ${APPLICATION_NAME}
-- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -90,8 +63,6 @@ objects:
             value: dns_query=${APPLICATION_NAME}.${NAMESPACE}.svc.cluster.local
           - name: DB_ADDR
             value: ${DB_ADDR}
-          - name: PROXY_ADDRESS_FORWARDING
-            value: ${PROXY_ADDRESS_FORWARDING}
           - name: DB_USER
             valueFrom:
               secretKeyRef:
@@ -167,11 +138,6 @@ parameters:
   name: DB_DATABASE
   required: true
   value: keycloakdb
-- description: Enabling proxy address forwarding
-  displayName: PROXY ADDRESS FORWARDING
-  name: PROXY_ADDRESS_FORWARDING
-  required: true
-  value: 'true'
 - description: 'Custom hostname for http service route. Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>'
   displayName: Custom http Route Hostname
   name: HOSTNAME_HTTP
