@@ -204,7 +204,7 @@ parameters:
   displayName: Push Content Mode
   name: PUSH_CONTENT_MODE
   required: true
-  value: full
+  value: generic
 - description: S3 URL
   displayName: S3 URL
   name: S3_URL
