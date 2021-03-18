@@ -39,10 +39,10 @@ RUN update-ca-trust extract
 COPY config.json /opt/mattermost/config/config.json
 
 # customized web app
-RUN rm -rf /opt/mattermost/client/*
-COPY dist.tar /opt/mattermost/client
-RUN tar -xvf /opt/mattermost/client/dist.tar -C /opt/mattermost/client
-RUN rm -rf /opt/mattermost/client/dist.tar
+#RUN rm -rf /opt/mattermost/client/*
+#COPY dist.tar /opt/mattermost/client
+#RUN tar -xvf /opt/mattermost/client/dist.tar -C /opt/mattermost/client
+#RUN rm -rf /opt/mattermost/client/dist.tar
 
 COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
 
@@ -50,15 +50,19 @@ RUN chmod +x /opt/mattermost/bin/entrypoint.sh
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
-RUN groupadd -g ${PGID} mattermost \
-    && useradd -u ${PUID} -g mattermost -b /opt mattermost \
-	&& chown -R mattermost:mattermost /opt/mattermost \
-	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
+#RUN groupadd -g ${PGID} mattermost \
+#    && useradd -u ${PUID} -g mattermost -b /opt mattermost \
+#	&& chown -R mattermost:mattermost /opt/mattermost \
+#	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
+
+RUN chgrp -R 0 /opt/mattermost && \
+    chmod -R g=u /opt/mattermost && \
+	setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
 EXPOSE 8065
 
 WORKDIR /opt/mattermost
 
-USER 2000
+#USER 2000
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]
