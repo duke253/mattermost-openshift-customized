@@ -4,22 +4,14 @@ Integrated with Microsoft Active Directory via Keycloak.
 Uses Minio (S3) as a file storage and Postgres as external databases for Mattermost and Keycloak.
 
 ### Step 0
-Adjust parameters in mattermost.yaml and keycloak-https.yaml regarding your environment (e.g. DB host, DB port, DB name etc...). See parameters and configmap.
+Adjust parameters in *.yaml regarding your environment (e.g. DB host, DB port, DB name etc...). See parameters and configmap.
 
 ### Step 1
 create new project
 ```
 oc new-project mattermost
 ```
-create service account
-```
-oc create serviceaccount mattermost
-```
-put the mattermost service account in anyuid scc and adjust the uid range for the namespace to run with
-```
-oc adm policy add-scc-to-user anyuid system:serviceaccount:mattermost:mattermost
-oc annotate namespace mattermost openshift.io/sa.scc.uid-range=2000/2000 --overwrite
-```
+
 ### Step 2 - Keycloak
 create secret for Keycloak Admin
 ```
@@ -35,9 +27,20 @@ oc create secret generic keycloak-database \
 ```
 create template
 ```
+cd ./keycloak
 oc create --filename keycloak-https.yaml
 ```
+create new secret with certificates for keycloak
+**Note:** Place your certificate bundle and key in ./kc-certs/ like "tls.crt" and "tls.key".
+In order to create certificate bundle run:
 
+```
+cat server.crt signing-ca.crt > tls.crt
+```
+
+```
+oc create secret generic keycloak-certs --from-file=./kc-certs
+```
 deploy new app from template
 ```
 oc new-app --template=keycloak-https -p NAMESPACE=mattermost
@@ -67,17 +70,9 @@ oc create secret generic mattermost-s3 \
 create new secret with certificate for S3
 **Note:** Place your CA certificate for S3 in ./s3-cert.
 ```
-cd ./s3-cert
+cd ..
+cd ./mattermost
 oc create secret generic s3-certs --from-file=./s3-cert
-```
-
-
-link secret to service account
-```
-oc secrets link mattermost mattermost-database
-oc secrets link mattermost mattermost-gitlab
-oc secrets link mattermost mattermost-s3
-oc secrets link mattermost s3-certs
 ```
 
 create template for first Mattermost instance
@@ -102,7 +97,7 @@ oc new-app --template=mattermost-2 --labels=app=mattermost-2
 
 ### Step 4 - Nginx reverse proxy
 create new secret with certificates for Nginx
-**Note:** Place your certificate and private key in ./nginx-proxy/mm-cert.
+**Note:** Place your certificate bundle and private key in ./nginx-proxy/mm-cert like "certificate_chained.crt" and "private.key"
 ```
 cd ./nginx-proxy
 oc create secret generic nginx-certs --from-file=./mm-cert
