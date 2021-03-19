@@ -214,14 +214,14 @@ parameters:
   displayName: GITLAB AuthEndpoint
   name: GITLAB_AUTHENDPOINT
   required: true
-  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/auth
+  value: https://mm-chat.duke253.ru/auth/realms/mattermost/protocol/openid-connect/auth
 - description: GITLAB TOKENENDPOINT
   displayName: GITLAB TokenEndpoint
   name: GITLAB_TOKENENDPOINT
   required: true
-  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/token
+  value: https://mm-chat.duke253.ru/auth/realms/mattermost/protocol/openid-connect/token
 - description: GITLAB USERAPIENAPOINT
   displayName: GITLAB UserApiEndpoint
   name: GITLAB_USERAPIENAPOINT
   required: true
-  value: https://secure-keycloak-mattermost.apps.duke253.ru/auth/realms/mattermost/protocol/openid-connect/userinfo
+  value: https://mm-chat.duke253.ru/auth/realms/mattermost/protocol/openid-connect/userinfo
