@@ -132,4 +132,4 @@ oc new-app --template=nginx --labels=app=nginx
 5. https://github.com/mattermost/mattermost-docker
 6. https://docs.mattermost.com/install/config-proxy-nginx.html
 
-**Optional**: you can setup Nginx reverse proxy in front of OpenShift as separate virtual machine. Pls see example in ./nginx-front-proxy-setup.txt
+**Optional**: you can setup Nginx reverse proxy in front of OpenShift as separate virtual machine. Pls, see example in ./nginx-front-proxy-setup.txt
