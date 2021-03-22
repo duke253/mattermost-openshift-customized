@@ -25,21 +25,22 @@ oc create secret generic keycloak-database \
 --from-literal=user=%username% \
 --from-literal=password=%password%
 ```
-create template
-```
-cd ./keycloak
-oc create --filename keycloak-https.yaml
-```
-create new secret with certificates for keycloak
+create secret with certificates for keycloak
+
 **Note:** Place your certificate bundle and key in ./kc-certs/ like "tls.crt" and "tls.key".
-In order to create certificate bundle run:
+In order to create certificate bundle run command like:
 
 ```
 cat server.crt signing-ca.crt > tls.crt
 ```
 
 ```
+cd ./keycloak
 oc create secret generic keycloak-certs --from-file=./kc-certs
+```
+create template
+```
+oc create --filename keycloak-https.yaml
 ```
 deploy new app from template
 ```
@@ -68,6 +69,7 @@ oc create secret generic mattermost-s3 \
 --from-literal=password=%Secret_Access_Key%
 ```
 create new secret with certificate for S3
+
 **Note:** Place your CA certificate for S3 in ./s3-cert.
 ```
 cd ..
@@ -97,13 +99,16 @@ oc new-app --template=mattermost-2 --labels=app=mattermost-2
 
 ### Step 4 - Nginx reverse proxy
 create new secret with certificates for Nginx
+
 **Note:** Place your certificate bundle and private key in ./nginx-proxy/mm-cert like "certificate_chained.crt" and "private.key"
 ```
+cd ..
 cd ./nginx-proxy
 oc create secret generic nginx-certs --from-file=./mm-cert
 ```
 
 create new secret with configuration file for Nginx
+
 **Note:** This configuration file based on official configuration example from https://docs.mattermost.com/install/config-proxy-nginx.html.
 ```
 oc create secret generic nginx-config --from-file=./mm-proxy.conf
@@ -126,3 +131,5 @@ oc new-app --template=nginx --labels=app=nginx
 4. https://github.com/goern/mattermost-openshift
 5. https://github.com/mattermost/mattermost-docker
 6. https://docs.mattermost.com/install/config-proxy-nginx.html
+
+**Optional**: you can setup Nginx reverse proxy in front of OpenShift as separate virtual machine. Pls see example in ./nginx-front-proxy-setup.txt
