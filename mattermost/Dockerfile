@@ -39,10 +39,10 @@ RUN update-ca-trust extract
 COPY config.json /opt/mattermost/config/config.json
 
 # customized web app
-#RUN rm -rf /opt/mattermost/client/*
-#COPY dist.tar /opt/mattermost/client
-#RUN tar -xvf /opt/mattermost/client/dist.tar -C /opt/mattermost/client
-#RUN rm -rf /opt/mattermost/client/dist.tar
+RUN rm -rf /opt/mattermost/client/*
+COPY dist.tar /opt/mattermost/client
+RUN tar -xvf /opt/mattermost/client/dist.tar -C /opt/mattermost/client
+RUN rm -rf /opt/mattermost/client/dist.tar
 
 COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
 
