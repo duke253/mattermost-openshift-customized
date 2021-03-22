@@ -1,7 +1,3 @@
-ssh -i "C:\Users\grigoriy.ildyukov\OneDrive - Accenture\Splunk_demo\ssh-key\yc-spl" spladmin@178.154.209.255
-
-timedatectl set-timezone Europe/Moscow
-
 yum install -y epel-release && yum -y update
 yum install -y yum-utils device-mapper-persistent-data lvm2 git ansible wget bash-completion NetworkManager NetworkManager-tui iotop nc nmap net-tools rsync tcpdump telnet traceroute nmon htop firewalld bind-utils
 
@@ -58,23 +54,23 @@ http {
 vi /etc/nginx/conf.d/mm-front.conf
 ->
 ======================================================
-upstream secure-nginx-mattermost.apps.duke253.ru {
-    server secure-nginx-mattermost.apps.duke253.ru:443;
+upstream %you_internal_servername_for_mattermost-openshift_route% {
+    server %you_internal_servername_for_mattermost-openshift_route%:443;
 }
 
-upstream secure-keycloak-mattermost.apps.duke253.ru {
-    server secure-keycloak-mattermost.apps.duke253.ru:443;
+upstream %you_internal_servername_for_keycloak-openshift_route% {
+    server %you_internal_servername_for_keycloak-openshift_route%:443;
 }
 
 server {
   listen 80 default_server;
-  server_name mm-chat.duke253.ru;
-  return 301 https://mm-chat.duke253.ru$request_uri;
+  server_name %you_external_servername_for_mattermost%;
+  return 301 https://%you_external_servername_for_mattermost%$request_uri;
 }
 
 server {
     listen      443 ssl http2;
-    server_name mm-chat.duke253.ru;
+    server_name %you_external_servername_for_mattermost%;
 
     ssl_certificate /etc/nginx/certs/certificate_chained.crt;
     ssl_certificate_key /etc/nginx/certs/private.key;
@@ -95,7 +91,7 @@ server {
     add_header X-Early-Data $tls1_3_early_data;
 
     location ~ /auth/.* {
-    proxy_pass                    https://secure-keycloak-mattermost.apps.duke253.ru;
+    proxy_pass                    https://%you_internal_servername_for_keycloak-openshift_route%;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
@@ -117,7 +113,7 @@ server {
     }
 
     location ~ /api/v[0-9]+/(users/)?websocket$ {
-    proxy_pass                    https://secure-nginx-mattermost.apps.duke253.ru;
+    proxy_pass                    https://%you_internal_servername_for_mattermost-openshift_route%;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
@@ -140,7 +136,7 @@ server {
     }
 
     location / {
-    proxy_pass                    https://secure-nginx-mattermost.apps.duke253.ru;
+    proxy_pass                    https://%you_internal_servername_for_mattermost-openshift_route%;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
