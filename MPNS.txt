@@ -1,0 +1,72 @@
+#enable up-arrow browsing throw commands history
+vi /etc/inputrc
+->
+===============================================
+...
+#Enable up-down-arrow browse from history
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+===============================================
+
+logout
+sudo -I
+
+firewall-cmd --zone=public --add-port=8066/tcp --permanent
+firewall-cmd --reload
+
+mkdir -p /opt/mattermost-mpns
+useradd --home-dir /opt/mattermost-mpns mattermost-mpns
+cd /opt/mattermost-mpns/
+wget https://github.com/mattermost/mattermost-push-proxy/releases/download/v5.22.4/mattermost-push-proxy.tar.gz
+tar -xvzf mattermost-push-proxy.tar.gz
+chown mattermost-mpns:mattermost-mpns -R ./*
+rm -rf mattermost-push-proxy.tar.gz
+
+echo "[Unit]
+Description=Mattermost Push Notification Service
+
+[Service]
+Type=simple
+User=mattermost-mpns
+ExecStart=/bin/sh -c '/opt/mattermost-mpns/mattermost-push-proxy/bin/mattermost-push-proxy | logger'
+WorkingDirectory=/opt/mattermost-mpns/mattermost-push-proxy
+
+[Install]
+WantedBy=multi-user.target" >> /etc/systemd/system/mattermost-push-proxy.service
+
+
+cp /opt/mattermost-mpns/mattermost-push-proxy/config/mattermost-push-proxy.json /opt/mattermost-mpns/mattermost-push-proxy/config/mattermost-push-proxy.json.bak
+
+vi /opt/mattermost-mpns/mattermost-push-proxy/config/mattermost-push-proxy.json
+->
+==========================================================
+{
+    "ListenAddress":":8066",
+    "ThrottlePerSec":300,
+    "ThrottleMemoryStoreSize":50000,
+    "ThrottleVaryByHeader":"X-Forwarded-For",
+    "EnableMetrics": false,
+    "ApplePushSettings":[
+        {
+            "Type":"apple",
+            "ApplePushUseDevelopment":true,
+            "ApplePushCertPrivate":"<path_to_private_key EXAMPLE:./config/aps_production_priv.pem>",
+            "ApplePushCertPassword":"",
+            "ApplePushTopic":"<Bundle_Identifier>"
+        },
+    ],
+    "AndroidPushSettings":[
+        {
+            "Type":"android_rn",
+            "AndroidApiKey":"<Android_Serveri_Key_From_FirebasConsole>"
+        },
+    ],
+    "EnableConsoleLog": true,
+    "EnableFileLog": false,
+    "LogFileLocation": ""
+}
+===========================================================
+
+systemctl enable mattermost-push-proxy.service
+systemctl start mattermost-push-proxy.service
+systemctl status mattermost-push-proxy.service
