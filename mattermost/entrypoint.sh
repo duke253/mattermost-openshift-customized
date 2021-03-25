@@ -77,6 +77,7 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.EmailSettings.SendPushNotifications = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.EmailSettings.PushNotificationServer = "'$MPNS_URL'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.EmailSettings.PushNotificationContents = "'$PUSH_CONTENT_MODE'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.TeamSettings.TeammateNameDisplay = "full_name"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 
 	
 	echo "done"
