@@ -131,5 +131,8 @@ oc new-app --template=nginx --labels=app=nginx
 4. https://github.com/goern/mattermost-openshift
 5. https://github.com/mattermost/mattermost-docker
 6. https://docs.mattermost.com/install/config-proxy-nginx.html
+7. https://developers.mattermost.com/contribute/mobile/
 
-**Optional**: you can setup Nginx reverse proxy in front of OpenShift as separate virtual machine. Pls, see example for Centos 7 in ./nginx-front-proxy-setup.txt
+**Optional:** you can setup Nginx reverse proxy in front of OpenShift as a separate virtual machine. Pls, see example for Centos 7 in ./nginx-front-proxy-setup.txt
+**Optional:** you can setup your own push-proxy server (MPNS) as a separate virtual machine. Pls, see example for Centos 7 in ./MPNS.txt.
+**Note:** MPNS required bilding your own mobile apps, pls see - https://developers.mattermost.com/contribute/mobile/
