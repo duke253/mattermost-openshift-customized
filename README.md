@@ -124,6 +124,13 @@ deploy Nginx reverse proxy from template
 oc new-app --template=nginx --labels=app=nginx
 ```
 
+### Filebeat
+Every pod in this deployment use filebeat container in order to send logs to logstash.
+In order to use it you should point filebeat to your logstash address:
+- edit the ./filebeat/filebeat.yml with your logstash address i.e. "hosts: ["your_logstash_address:your_logstash_port"]"
+- build your own filebeat image using files in ./filebeat/filebeat.yml
+- push it in any available image registry and edit other yaml-files in order to use your own filebeat image i.e. "image: quay.io/your_registry/your_filebeat_image:1.0"
+
 ### Useful links:
 1. https://medium.com/@mrtcve/mattermost-teams-edition-replacing-gitlab-sso-with-keycloak-dabf13ebb99e
 2. https://github.com/keycloak/keycloak-containers/tree/master/openshift-examples
