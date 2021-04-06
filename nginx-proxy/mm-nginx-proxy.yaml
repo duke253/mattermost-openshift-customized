@@ -33,6 +33,8 @@ objects:
           volumeMounts:
           - mountPath: /etc/nginx/certs
             name: nginx-certs
+          - mountPath: /etc/nginx/ssl
+            name: nginx-client-certs
           - mountPath: /etc/nginx/conf.d
             name: nginx-config
           - mountPath: /var/log/nginx
@@ -79,6 +81,10 @@ objects:
           secret:
             defaultMode: 420
             secretName: nginx-certs
+        - name: nginx-client-certs
+          secret:
+            defaultMode: 420
+            secretName: nginx-client-certs
         - name: nginx-config
           secret:
             defaultMode: 420
@@ -125,7 +131,7 @@ objects:
   metadata:
     name: secure-nginx
   spec:
-    host:
+    host: mm-chat.duke253.ru
     tls:
       termination: passthrough
     to:

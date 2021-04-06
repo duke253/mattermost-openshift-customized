@@ -101,6 +101,12 @@ oc new-app --template=mattermost-2 --labels=app=mattermost-2
 create new secret with certificates for Nginx
 
 **Note:** Place your certificate bundle and private key in ./nginx-proxy/mm-cert like "certificate_chained.crt" and "private.key"
+In order to create certificate bundle run command like:
+
+```
+cat server.crt signing-ca.crt > tls.crt
+```
+
 ```
 cd ..
 cd ./nginx-proxy
