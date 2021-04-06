@@ -120,7 +120,7 @@ objects:
   metadata:
     name: nginx
   spec:
-    host: mm-chat.duke253.ru
+    host:
     to:
       kind: Service
       name: nginx
