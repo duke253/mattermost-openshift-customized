@@ -104,7 +104,7 @@ create new secret with certificates for Nginx
 In order to create certificate bundle run command like:
 
 ```
-cat server.crt signing-ca.crt > tls.crt
+cat server.crt signing-ca.crt > certificate_chained.crt
 ```
 
 ```

@@ -1,12 +1,12 @@
 yum install -y epel-release && yum -y update
 yum install -y yum-utils device-mapper-persistent-data lvm2 git ansible wget bash-completion NetworkManager NetworkManager-tui iotop nc nmap net-tools rsync tcpdump telnet traceroute nmon htop firewalld bind-utils
 
-#enable up-arrow browsing throw commands history
+# Enable up-arrow browsing throw commands history
 vi /etc/inputrc
 ->
 ===============================================
 ...
-#Enable up-down-arrow browse from history
+# Enable up-down-arrow browse from history
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 ===============================================
@@ -51,26 +51,34 @@ http {
 }
 ======================================================
 
+# Place SSL certificate bundle & private key in /etc/nginx/certs with names "certificate_chained.crt" & "private.key"
+# In order to create certificate bundle use command like
+# cat server.crt signing-ca.crt > certificate_chained.crt
+
+# Place your CLIENT SSL certificates i.e. "client.pem", "client.key" & "trusted_ca_cert.crt" in /etc/nginx/ssl
+# Use the same sertificates and key as for SERVER
+
+
 vi /etc/nginx/conf.d/mm-front.conf
 ->
 ======================================================
-upstream %you_internal_servername_for_mattermost-openshift_route% {
-    server %you_internal_servername_for_mattermost-openshift_route%:443;
+upstream mm-chat.duke253.ru {
+    server mm-chat.duke253.ru:443;
 }
 
-upstream %you_internal_servername_for_keycloak-openshift_route% {
-    server %you_internal_servername_for_keycloak-openshift_route%:443;
+upstream secure-keycloak-mattermost.apps.duke253.ru {
+    server secure-keycloak-mattermost.apps.duke253.ru:443;
 }
 
 server {
   listen 80 default_server;
-  server_name %you_external_servername_for_mattermost%;
-  return 301 https://%you_external_servername_for_mattermost%$request_uri;
+  server_name mm-chat.duke253.ru;
+  return 301 https://mm-chat.duke253.ru$request_uri;
 }
 
 server {
     listen      443 ssl http2;
-    server_name %you_external_servername_for_mattermost%;
+    server_name mm-chat.duke253.ru;
 
     ssl_certificate /etc/nginx/certs/certificate_chained.crt;
     ssl_certificate_key /etc/nginx/certs/private.key;
@@ -91,7 +99,7 @@ server {
     add_header X-Early-Data $tls1_3_early_data;
 
     location ~ /auth/.* {
-    proxy_pass                    https://%you_internal_servername_for_keycloak-openshift_route%;
+    proxy_pass                    https://secure-keycloak-mattermost.apps.duke253.ru;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
@@ -113,7 +121,7 @@ server {
     }
 
     location ~ /api/v[0-9]+/(users/)?websocket$ {
-    proxy_pass                    https://%you_internal_servername_for_mattermost-openshift_route%;
+    proxy_pass                    https://mm-chat.duke253.ru;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
@@ -134,11 +142,11 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Frame-Options SAMEORIGIN;
 
-	client_max_body_size 50M;
+    client_max_body_size 50M;
     }
 
     location / {
-    proxy_pass                    https://%you_internal_servername_for_mattermost-openshift_route%;
+    proxy_pass                    https://mm-chat.duke253.ru;
     proxy_ssl_certificate         /etc/nginx/ssl/client.pem;
     proxy_ssl_certificate_key     /etc/nginx/ssl/client.key;
     proxy_ssl_protocols           TLSv1.2 TLSv1.3;
@@ -158,7 +166,7 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Frame-Options SAMEORIGIN;
 
-	client_max_body_size 50M;
+    client_max_body_size 50M;
     }
 }
 
