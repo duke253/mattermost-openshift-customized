@@ -51,11 +51,11 @@ http {
 }
 ======================================================
 
-# Place SSL certificate bundle & private key in /etc/nginx/certs with names "certificate_chained.crt" & "private.key"
+# Place SSL certificate bundle & private key in /etc/nginx/certs with names "certificate_chained.crt" and "private.key"
 # In order to create certificate bundle use command like
 # cat server.crt signing-ca.crt > certificate_chained.crt
 
-# Place your CLIENT SSL certificates i.e. "client.pem", "client.key" & "trusted_ca_cert.crt" in /etc/nginx/ssl
+# Place your CLIENT SSL certificates i.e. "client.pem", "client.key" and "trusted_ca_cert.crt" in /etc/nginx/ssl
 # Use the same sertificates and key as for SERVER
 
 
