@@ -52,7 +52,7 @@ RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client
 
 # teamcity plugin
 COPY mattermost-teamcity-plugin-master.tar /opt/mattermost/plugins
-RUN tar -xvf /opt/mattermost/plugins/mattermost-teamcity-plugin-master.tar
+RUN tar -xvf /opt/mattermost/plugins/mattermost-teamcity-plugin-master.tar -C /opt/mattermost/plugins
 RUN rm -rf /opt/mattermost/plugins/mattermost-teamcity-plugin-master.tar
 
 RUN chgrp -R 0 /opt/mattermost && \
