@@ -44,6 +44,11 @@ COPY dist.tar /opt/mattermost/client
 RUN tar -xvf /opt/mattermost/client/dist.tar -C /opt/mattermost/client
 RUN rm -rf /opt/mattermost/client/dist.tar
 
+# teamcity plugin
+COPY mattermost-teamcity-plugin-master.tar /opt/mattermost/plugins
+RUN tar -xvf /opt/mattermost/plugins/mattermost-teamcity-plugin-master.tar
+RUN rm -rf /opt/mattermost/plugins/mattermost-teamcity-plugin-master.tar
+
 COPY entrypoint.sh /opt/mattermost/bin/entrypoint.sh
 
 RUN chmod +x /opt/mattermost/bin/entrypoint.sh
