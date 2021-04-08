@@ -50,11 +50,6 @@ RUN chmod +x /opt/mattermost/bin/entrypoint.sh
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
-#RUN groupadd -g ${PGID} mattermost \
-#    && useradd -u ${PUID} -g mattermost -b /opt mattermost \
-#	&& chown -R mattermost:mattermost /opt/mattermost \
-#	&& setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
-
 RUN chgrp -R 0 /opt/mattermost && \
     chmod -R g=u /opt/mattermost && \
 	setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
