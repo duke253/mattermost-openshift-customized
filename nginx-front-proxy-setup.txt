@@ -181,6 +181,13 @@ firewall-cmd --permanent --add-service=https
 
 firewall-cmd --reload
 
+vi /etc/hosts
+->
+================================================================
+...
+%ip_of_your_openshift(i.e. nginx in openshift)	mm-chat.duke253.ru
+================================================================
+
 systemctl start nginx
 systemctl enable nginx
 systemctl status nginx
