@@ -84,7 +84,7 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.TeamSettings.TeammateNameDisplay = "full_name"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.PluginSettings.EnableUploads = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.PluginSettings.PluginStates += {"mattermost-teamcity-plugin": {"Enable": "true"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-	jq '.PluginSettings.Plugins += {"mattermost-teamcity-plugin": {"teamcitymaxbuilds": "5", "teamcitytoken": [$TEAMCITY_AUTH_TOKEN], "teamcityurl": [$TEAMCITY_URL]}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins += {"mattermost-teamcity-plugin": {"teamcitymaxbuilds": "5", "teamcitytoken": "'$TEAMCITY_AUTH_TOKEN'", "teamcityurl": "'$TEAMCITY_URL'"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 
 	echo "done"
 else
