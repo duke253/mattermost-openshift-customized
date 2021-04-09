@@ -26,6 +26,8 @@ GITLAB_TOKENENDPOINT=${GITLAB_TOKENENDPOINT:-none}
 GITLAB_USERAPIENAPOINT=${GITLAB_USERAPIENAPOINT:-none}
 MPNS_URL=${MPNS_URL:-none}
 PUSH_CONTENT_MODE=${PUSH_CONTENT_MODE:-none}
+TEAMCITY_AUTH_TOKEN={$TEAMCITY_AUTH_TOKEN}
+TEAMCITY_URL={$TEAMCITY_URL}
 
 echo $DB_HOST
 echo $DB_PORT
@@ -44,6 +46,8 @@ echo $GITLAB_TOKENENDPOINT
 echo $GITLAB_USERAPIENAPOINT
 echo $MPNS_URL
 echo $PUSH_CONTENT_MODE
+echo $TEAMCITY_AUTH_TOKEN
+echo $TEAMCITY_URL
 
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
@@ -78,7 +82,10 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.EmailSettings.PushNotificationServer = "'$MPNS_URL'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.EmailSettings.PushNotificationContents = "'$PUSH_CONTENT_MODE'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.TeamSettings.TeammateNameDisplay = "full_name"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-	jq '.PluginSettings.EnableUploads = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins.mattermost-teamcity-plugin.teamcitymaxbuilds = "5"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins.mattermost-teamcity-plugin.teamcitytoken = "'$TEAMCITY_AUTH_TOKEN'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins.mattermost-teamcity-plugin.teamcityurl = "'$TEAMCITY_URL'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins.PluginStates.mattermost-teamcity-plugin.Enable = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 
 	
 	echo "done"
