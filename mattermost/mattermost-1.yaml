@@ -43,7 +43,7 @@ objects:
           name: '${APPLICATION_NAME}-1'
       spec:
         containers:
-        - image: quay.io/duke253/mattermost-openshift-customized:1.23
+        - image: quay.io/duke253/mattermost-openshift-customized:1.24
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
           env:
@@ -77,6 +77,11 @@ objects:
               secretKeyRef:
                 key: password
                 name: mattermost-s3
+          - name: TEAMCITY_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: teamcity-auth-token
           - name: DB_DATABASE
             valueFrom:
               configMapKeyRef:
@@ -106,6 +111,8 @@ objects:
             value: ${MPNS_URL}
           - name: PUSH_CONTENT_MODE
             value: ${PUSH_CONTENT_MODE}
+          - name: TEAMCITY_URL
+            value: ${TEAMCITY_URL}
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -225,3 +232,8 @@ parameters:
   name: GITLAB_USERAPIENAPOINT
   required: true
   value: https://mm-chat.duke253.ru/auth/realms/mattermost/protocol/openid-connect/userinfo
+- description: TEAMCITY URL
+  displayName: TEAMCITY URL
+  name: TEAMCITY_URL
+  required: true
+  value: http://178.154.209.250:8111
