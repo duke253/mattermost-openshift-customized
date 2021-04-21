@@ -10,7 +10,7 @@ def readConfig():
     """
     Reads config.json to get configuration settings
     """
-    d = json.load(open('./conf/config.json'))
+    d = json.load(open('./config/config.json'))
 
     global application_host, application_port, application_debug
     application_host = d["application"]["host"]
