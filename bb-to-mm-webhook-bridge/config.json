@@ -1,7 +1,7 @@
 {
 	"application" : {
 		"host" : "0.0.0.0",
-		"port" : 80,
+		"port" : 5006,
 		"debug" : false
 	},
 	"colors" : {
@@ -10,12 +10,12 @@
 		"success" : "#28c12b"
 	},
 	"mattermost" : {
-		"server_url" : "https://your_MM_.fqdn.com/",
+		"server_url" : "https://mm-chat.duke253.ru/",
 		"post_user_name" : "Your_MM_Username",
 		"post_user_icon" : ""
 	},
 	"bitbucket" : {
-		"server_url" : "",
+		"server_url" : "http://178.154.209.250:7990",
 		"ignore_comments" : []
 	}
 }
