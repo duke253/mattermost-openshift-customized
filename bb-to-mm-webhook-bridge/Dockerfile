@@ -7,7 +7,7 @@ COPY helpers.py /opt/webhook-bridge
 COPY config.json /opt/webhook-bridge/config
 
 RUN chgrp -R 0 /opt/webhook-bridge && \
-    chmod -R g=u /opt/webhook-bridge &&
+    chmod -R g=u /opt/webhook-bridge
 
 RUN pip install flask
 RUN pip install requests
