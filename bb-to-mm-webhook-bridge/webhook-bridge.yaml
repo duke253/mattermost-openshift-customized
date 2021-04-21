@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: webhook-bridge
+
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: webhook-bridge
+  spec:
+    selector:
+      name: webhook-bridge
+    strategy:
+      activeDeadlineSeconds: 21600
+      type: Recreate
+    replicas: 1
+    securityContext: {}
+    template:
+      metadata:
+        labels:
+          name: webhook-bridge
+      spec:
+        containers:
+        - image: quay.io/duke253/mattermost-bitbucket-bridge:1.1
+          imagePullPolicy: Always
+          name: webhook-bridge
+          ports:
+          - containerPort: 5006
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /opt/webhook-bridge/config
+            name: webhook-bridge-config
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 512Mi
+        volumes:
+        - name: webhook-bridge-config
+          secret:
+            defaultMode: 420
+            secretName: webhook-bridge-config
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: webhook-bridge
+  spec:
+    ports:
+    - name: 5006-tcp
+      port: 5006
+      protocol: TCP
+      targetPort: 5006
+    selector:
+      deploymentconfig: webhook-bridge
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: webhook-bridge
+  spec:
+    host:
+    to:
+      kind: Service
+      name: webhook-bridge
+    port:
+      targetPort: 5006-tcp
