@@ -14,7 +14,7 @@ objects:
     strategy:
       activeDeadlineSeconds: 21600
       type: Recreate
-    replicas: 2
+    replicas: 1
     securityContext: {}
     template:
       metadata:
