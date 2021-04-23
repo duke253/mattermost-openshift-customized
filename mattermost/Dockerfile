@@ -50,11 +50,6 @@ RUN chmod +x /opt/mattermost/bin/entrypoint.sh
 
 RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client/plugins
 
-# teamcity plugin
-COPY mattermost-teamcity-plugin-1.0.1.tar /opt/mattermost/plugins
-RUN tar -xvf /opt/mattermost/plugins/mattermost-teamcity-plugin-1.0.1.tar -C /opt/mattermost/plugins
-RUN rm -rf /opt/mattermost/plugins/mattermost-teamcity-plugin-1.0.1.tar
-
 RUN chgrp -R 0 /opt/mattermost && \
     chmod -R g=u /opt/mattermost && \
 	setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
