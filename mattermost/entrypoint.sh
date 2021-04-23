@@ -63,7 +63,7 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.GitLabSettings.AuthEndpoint = "'$GITLAB_AUTHENDPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.TokenEndpoint = "'$GITLAB_TOKENENDPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.GitLabSettings.UserApiEndpoint = "'$GITLAB_USERAPIENAPOINT'"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
-#	jq '.ServiceSettings.EnableInsecureOutgoingConnections = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
+	jq '.ServiceSettings.EnableInsecureOutgoingConnections = "true"' "$MM_CONFIG" > "$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
 	jq '.FileSettings.DriverName = "amazons3"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3AccessKeyId = "'$S3_KEY'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.FileSettings.AmazonS3SecretAccessKey = "'$S3_SECRET'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
@@ -83,9 +83,9 @@ if [ ! -f $MM_CONFIG ]; then
 	jq '.EmailSettings.PushNotificationContents = "'$PUSH_CONTENT_MODE'"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.TeamSettings.TeammateNameDisplay = "full_name"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 	jq '.ServiceSettings.EnableIncomingWebhooks = "true"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-#	jq '.PluginSettings.EnableUploads = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-#	jq '.PluginSettings.PluginStates += {"mattermost-teamcity-plugin": {"Enable": "true"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
-#	jq '.PluginSettings.Plugins += {"mattermost-teamcity-plugin": {"teamcitymaxbuilds": "5", "teamcitytoken": "'$TEAMCITY_AUTH_TOKEN'", "teamcityurl": "'$TEAMCITY_URL'"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.EnableUploads = "false"' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.PluginStates += {"mattermost-teamcity-plugin": {"Enable": "true"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
+	jq '.PluginSettings.Plugins += {"mattermost-teamcity-plugin": {"teamcitymaxbuilds": "5", "teamcitytoken": "'$TEAMCITY_AUTH_TOKEN'", "teamcityurl": "'$TEAMCITY_URL'"}}' $MM_CONFIG > $MM_CONFIG.tmp && mv $MM_CONFIG.tmp $MM_CONFIG
 
 	echo "done"
 else
