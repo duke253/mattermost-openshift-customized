@@ -2,6 +2,7 @@ OpenShift application template for Mattermost Team Edition.
 Implements active-passive scheme for HA via two separate instances of Mattermost server and Nginx reverse proxy in front of them.
 Integrated with Microsoft Active Directory via Keycloak.
 Uses Minio (S3) as a file storage and Postgres as external databases for Mattermost and Keycloak.
+Possible integrated with Bitbucket via WebHook Bridge server.
 
 ### Step 0
 Adjust parameters in *.yaml regarding your environment (e.g. DB host, DB port, DB name etc...). See parameters and configmap.
@@ -136,6 +137,22 @@ oc create --filename mm-nginx-proxy.yaml
 deploy Nginx reverse proxy from template
 ```
 oc new-app --template=nginx --labels=app=nginx
+```
+
+### Step 5 - WebHook Bridge server
+create secret with configuration file for WebHook Bridge Server
+```
+oc create secret generic webhook-bridge-config --from-file=./config.json
+```
+
+create template for WebHook Bridge server
+```
+oc create --filename webhook-bridge.yaml
+```
+
+deploy WebHook Bridge server from template
+```
+oc new-app --template=webhook-bridge --labels=app=webhook-bridge
 ```
 
 ### Filebeat
