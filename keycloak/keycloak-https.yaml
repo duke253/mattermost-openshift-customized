@@ -63,7 +63,7 @@ objects:
     selector:
       deploymentConfig: ${APPLICATION_NAME}
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         labels:

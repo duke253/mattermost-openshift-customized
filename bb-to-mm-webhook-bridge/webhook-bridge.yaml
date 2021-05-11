@@ -13,7 +13,7 @@ objects:
       name: webhook-bridge
     strategy:
       activeDeadlineSeconds: 21600
-      type: Recreate
+      type: Rolling
     replicas: 1
     securityContext: {}
     template:
