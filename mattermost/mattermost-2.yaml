@@ -201,7 +201,7 @@ parameters:
   displayName: MPNS url
   name: MPNS_URL
   required: true
-  value: http://mpns.duke253.ru:8066
+  value: https://mpns.duke253.ru:8066
 - description: PUSH CONTENT MODE
   displayName: Push Content Mode
   name: PUSH_CONTENT_MODE

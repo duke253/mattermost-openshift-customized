@@ -1,9 +1,10 @@
-#enable up-arrow browsing throw commands history
+# Enable up-arrow browsing throw commands history
+
 vi /etc/inputrc
 ->
 ===============================================
 ...
-#Enable up-down-arrow browse from history
+# Enable up-down-arrow browse from history
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 ===============================================
@@ -11,7 +12,7 @@ vi /etc/inputrc
 logout
 sudo -I
 
-firewall-cmd --zone=public --add-port=8066/tcp --permanent
+firewall-cmd --zone=public --add-port=8067/tcp --permanent
 firewall-cmd --reload
 
 mkdir -p /opt/mattermost-mpns
@@ -41,7 +42,7 @@ vi /opt/mattermost-mpns/mattermost-push-proxy/config/mattermost-push-proxy.json
 ->
 ==========================================================
 {
-    "ListenAddress":":8066",
+    "ListenAddress":":8067",
     "ThrottlePerSec":300,
     "ThrottleMemoryStoreSize":50000,
     "ThrottleVaryByHeader":"X-Forwarded-For",
@@ -70,3 +71,113 @@ vi /opt/mattermost-mpns/mattermost-push-proxy/config/mattermost-push-proxy.json
 systemctl enable mattermost-push-proxy.service
 systemctl start mattermost-push-proxy.service
 systemctl status mattermost-push-proxy.service
+
+
+
+
+##########################################################################
+# Optional
+# Nginx reverse proxy in front of MPNS for secured transport (SSL)
+
+mkdir -p /opt/mattermost-mpns/mattermost-push-proxy/certs
+cat certificate.crt ca_bundle.crt > certificate_chained.crt
+cp certificate_chained.crt /opt/mattermost-mpns/mattermost-push-proxy/certs/
+cp private.key /opt/mattermost-mpns/mattermost-push-proxy/certs/
+chown -R mattermost-mpns:mattermost-mpns /opt/mattermost-mpns/mattermost-push-proxy/certs/*
+chmod 600 -R /opt/mattermost-mpns/mattermost-push-proxy/certs/*
+
+firewall-cmd --zone=public --add-port=8066/tcp --permanent
+firewall-cmd --reload
+
+semanage port -a -t http_port_t  -p tcp 8066
+
+semanage port -l | grep http_port_t
+
+setsebool -PV httpd_can_network_connect 1
+#setsebool -PV httpd_can_network_relay 1
+
+yum install -y epel-release && yum -y update
+
+yum -y install nginx
+
+cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+
+vi /etc/nginx/nginx.conf
+->
+====================================================
+worker_processes  auto;
+
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    keepalive_timeout  65;
+
+    #gzip  on;
+
+    include /etc/nginx/conf.d/*.conf;
+}
+======================================================
+
+vi /etc/nginx/conf.d/mpns-front-proxy.conf
+->
+======================================================
+upstream mpns_backend {
+    server 127.0.0.1:8067;
+}
+
+server {
+    listen      8066 ssl http2;
+    server_name _;
+
+    ssl_certificate /opt/mattermost-mpns/mattermost-push-proxy/certs/certificate_chained.crt;
+    ssl_certificate_key /opt/mattermost-mpns/mattermost-push-proxy/certs/private.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_timeout 1d;
+
+    ssl_early_data on;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256';
+    ssl_prefer_server_ciphers on;
+    ssl_session_cache shared:SSL:50m;
+    add_header Strict-Transport-Security max-age=15768000;
+
+    http2_push_preload on;
+
+    location / {
+    proxy_pass http://mpns_backend;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Client-IP $remote_addr;
+
+    client_max_body_size 50M;
+    }
+}
+================================================================
+
+systemctl start nginx
+systemctl enable nginx
+systemctl status nginx
