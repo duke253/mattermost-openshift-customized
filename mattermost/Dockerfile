@@ -52,13 +52,12 @@ RUN mkdir -p /opt/mattermost/data /opt/mattermost/plugins /opt/mattermost/client
 
 RUN chgrp -R 0 /opt/mattermost && \
     chmod -R g=u /opt/mattermost && \
-	chmod g=u /etc/passwd &&\
 	setcap cap_net_bind_service=+ep /opt/mattermost/bin/mattermost
 
 EXPOSE 8065
 
 WORKDIR /opt/mattermost
 
-USER 1001
+#USER 1001
 
 ENTRYPOINT [ "/opt/mattermost/bin/entrypoint.sh" ]

@@ -43,7 +43,7 @@ objects:
           name: '${APPLICATION_NAME}-1'
       spec:
         containers:
-        - image: quay.io/duke253/mattermost-openshift-customized:1.29
+        - image: quay.io/duke253/mattermost-openshift-customized:1.28
           imagePullPolicy: Always
           name: '${APPLICATION_NAME}'
           env:

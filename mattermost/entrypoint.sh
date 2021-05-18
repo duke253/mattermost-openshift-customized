@@ -47,13 +47,6 @@ echo $MPNS_URL
 echo $PUSH_CONTENT_MODE
 echo $SITE_URL
 
-# Support for mmctl
-if ! whoami &> /dev/null; then
-  if [ -w /etc/passwd ]; then
-    echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default} user:${HOME}:/sbin/nologin" >> /etc/passwd
-  fi
-fi
-
 # Configure mattermost server
 if [ ! -f $MM_CONFIG ]; then
 	echo -ne "Configure new config.json..."
