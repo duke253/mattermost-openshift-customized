@@ -144,6 +144,8 @@ create secret with configuration file for WebHook Bridge Server
 
 **Note:** configuration manual is here - https://github.com/cvitter/mattermost-bitbucket-bridge
 ```
+cd ..
+cd ./bb-to-mm-webhook-bridge
 oc create secret generic webhook-bridge-config --from-file=./config.json
 ```
 
