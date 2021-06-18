@@ -5,7 +5,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 RUN rm /etc/nginx/nginx.conf
 
 # deploy specific nginx configuration file
-COPY mm-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
+COPY whb-proxy.conf /etc/nginx/conf.d/mm-proxy.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # copy certificates
