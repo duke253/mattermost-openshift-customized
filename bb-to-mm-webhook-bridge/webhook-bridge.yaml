@@ -37,12 +37,58 @@ objects:
               memory: 1Gi
             requests:
               cpu: 50m
-              memory: 512Mi
+              memory: 256Mi
+        - image: quay.io/duke253/whb-nginx-openshift-customized:1.1
+          imagePullPolicy: Always
+          name: whb-nginx
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/nginx/certs
+            name: nginx-certs
+          - mountPath: /etc/nginx/ssl
+            name: nginx-client-certs
+          - mountPath: /etc/nginx/conf.d
+            name: nginx-config
+          - mountPath: /var/log/nginx
+            name: ng-logs
+          livenessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
         volumes:
         - name: webhook-bridge-config
           secret:
             defaultMode: 420
             secretName: webhook-bridge-config
+        - name: nginx-certs
+          secret:
+            defaultMode: 420
+            secretName: whb-nginx-certs
+        - name: nginx-config
+          secret:
+            defaultMode: 420
+            secretName: whb-nginx-config
 - kind: Service
   apiVersion: v1
   metadata:
@@ -55,14 +101,51 @@ objects:
       targetPort: 5006
     selector:
       deploymentconfig: webhook-bridge
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: whb-nginx
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: webhook-bridge
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: whb-secure-nginx
+  spec:
+    ports:
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deploymentconfig: webhook-bridge
 - kind: Route
   apiVersion: v1
   metadata:
-    name: webhook-bridge
+    name: whb-nginx
   spec:
     host:
     to:
       kind: Service
-      name: webhook-bridge
+      name: whb-nginx
     port:
-      targetPort: 5006-tcp
+      targetPort: 8080-tcp
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: whb-secure-nginx
+  spec:
+    host: mm-whb.duke253.ru
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: whb-secure-nginx
+    port:
+      targetPort: 8443-tcp
