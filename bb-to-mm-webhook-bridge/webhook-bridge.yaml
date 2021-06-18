@@ -48,13 +48,9 @@ objects:
             protocol: TCP
           volumeMounts:
           - mountPath: /etc/nginx/certs
-            name: nginx-certs
-          - mountPath: /etc/nginx/ssl
-            name: nginx-client-certs
+            name: whb-nginx-certs
           - mountPath: /etc/nginx/conf.d
-            name: nginx-config
-          - mountPath: /var/log/nginx
-            name: ng-logs
+            name: whb-nginx-config
           livenessProbe:
             failureThreshold: 3
             tcpSocket:
@@ -81,11 +77,11 @@ objects:
           secret:
             defaultMode: 420
             secretName: webhook-bridge-config
-        - name: nginx-certs
+        - name: whb-nginx-certs
           secret:
             defaultMode: 420
             secretName: whb-nginx-certs
-        - name: nginx-config
+        - name: whb-nginx-config
           secret:
             defaultMode: 420
             secretName: whb-nginx-config
