@@ -137,6 +137,7 @@ objects:
   metadata:
     name: whb-secure-nginx
   spec:
+    host: mm-whb.duke253.ru
     tls:
       termination: passthrough
     to:
