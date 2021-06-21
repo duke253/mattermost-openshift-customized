@@ -21,6 +21,7 @@ objects:
         labels:
           name: whb-nginx
       spec:
+        containers:
         - image: quay.io/duke253/whb-nginx-openshift-customized:1.5
           imagePullPolicy: Always
           name: whb-nginx
