@@ -100,18 +100,6 @@ objects:
 - kind: Service
   apiVersion: v1
   metadata:
-    name: whb-nginx
-  spec:
-    ports:
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      deploymentconfig: webhook-bridge
-- kind: Service
-  apiVersion: v1
-  metadata:
     name: whb-secure-nginx
   spec:
     ports:
@@ -121,16 +109,6 @@ objects:
       targetPort: 8443
     selector:
       deploymentconfig: webhook-bridge
-- kind: Route
-  apiVersion: v1
-  metadata:
-    name: whb-nginx
-  spec:
-    to:
-      kind: Service
-      name: whb-nginx
-    port:
-      targetPort: 8080-tcp
 - kind: Route
   apiVersion: v1
   metadata:
