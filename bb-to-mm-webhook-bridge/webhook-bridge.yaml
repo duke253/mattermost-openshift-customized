@@ -38,7 +38,7 @@ objects:
             requests:
               cpu: 50m
               memory: 256Mi
-        - image: quay.io/duke253/whb-nginx-openshift-customized:1.6
+        - image: quay.io/duke253/whb-nginx-openshift-customized:1.7
           imagePullPolicy: Always
           name: whb-nginx
           ports:
