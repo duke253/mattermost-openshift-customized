@@ -51,18 +51,6 @@ objects:
             name: whb-nginx-certs
           - mountPath: /etc/nginx/conf.d
             name: whb-nginx-config
-          livenessProbe:
-            failureThreshold: 3
-            tcpSocket:
-                port: 8080
-                periodSeconds: 20
-                initialDelaySeconds: 10
-          readinessProbe:
-            failureThreshold: 3
-            tcpSocket:
-                port: 8080
-                periodSeconds: 20
-                initialDelaySeconds: 10
           resources:
             limits:
               cpu: '1'
