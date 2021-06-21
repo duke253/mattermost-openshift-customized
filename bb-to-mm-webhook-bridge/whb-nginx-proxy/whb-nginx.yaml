@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: whb-nginx
+
+objects:
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    name: whb-nginx
+  spec:
+    selector:
+      name: whb-nginx
+    strategy:
+      activeDeadlineSeconds: 21600
+      type: Rolling
+    replicas: 1
+    securityContext: {}
+    template:
+      metadata:
+        labels:
+          name: whb-nginx
+      spec:
+        - image: quay.io/duke253/whb-nginx-openshift-customized:1.5
+          imagePullPolicy: Always
+          name: whb-nginx
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+            protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/nginx/certs
+            name: whb-nginx-certs
+          - mountPath: /etc/nginx/conf.d
+            name: whb-nginx-config
+          livenessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1Gi
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+        volumes:
+        - name: whb-nginx-certs
+          secret:
+            defaultMode: 420
+            secretName: whb-nginx-certs
+        - name: whb-nginx-config
+          secret:
+            defaultMode: 420
+            secretName: whb-nginx-config
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: whb-nginx
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      deploymentconfig: whb-nginx
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: whb-secure-nginx
+  spec:
+    ports:
+    - name: 8443-tcp
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      deploymentconfig: whb-nginx
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: whb-nginx
+  spec:
+    host:
+    to:
+      kind: Service
+      name: whb-nginx
+    port:
+      targetPort: 8080-tcp
+- kind: Route
+  apiVersion: v1
+  metadata:
+    name: whb-secure-nginx
+  spec:
+    host: mm-whb.duke253.ru
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: whb-secure-nginx
+    port:
+      targetPort: 8443-tcp
