@@ -38,7 +38,7 @@ objects:
             requests:
               cpu: 50m
               memory: 256Mi
-        - image: quay.io/duke253/whb-nginx-openshift-customized:1.7
+        - image: quay.io/duke253/whb-nginx-openshift-customized:1.8
           imagePullPolicy: Always
           name: whb-nginx
           ports:
@@ -51,6 +51,18 @@ objects:
             name: whb-nginx-certs
           - mountPath: /etc/nginx/conf.d
             name: whb-nginx-config
+          livenessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            tcpSocket:
+                port: 8080
+                periodSeconds: 20
+                initialDelaySeconds: 10
           resources:
             limits:
               cpu: '1'
@@ -83,6 +95,18 @@ objects:
       port: 5006
       protocol: TCP
       targetPort: 5006
+    selector:
+      deploymentconfig: webhook-bridge
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: whb-nginx
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
     selector:
       deploymentconfig: webhook-bridge
 - kind: Service
