@@ -149,6 +149,24 @@ cd ./bb-to-mm-webhook-bridge
 oc create secret generic webhook-bridge-config --from-file=./config.json
 ```
 
+create secret with SSL certificates and private key for Webhook Bridge (Nginx)
+
+**Note:** Place your certificate bundle and private key in ./whb-nginx-proxy/whb-cert with names "certificate_chained.crt" and "private.key"
+In order to create certificate bundle run command like:
+
+```
+cat server.crt signing-ca.crt > certificate_chained.crt
+```
+
+```
+oc create secret generic whb-nginx-certs --from-file=./whb-nginx-proxy/whb-cert
+```
+
+create secret with configuration file for Nginx
+```
+oc create secret generic whb-nginx-config --from-file=./whb-nginx-proxy/whb-proxy.conf
+```
+
 create template for WebHook Bridge server
 ```
 oc create --filename webhook-bridge.yaml
