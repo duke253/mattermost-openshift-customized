@@ -32,8 +32,7 @@ RUN cd /opt && \
 
 # S3 certificate
 COPY public.crt /etc/pki/ca-trust/source/anchors
-RUN update-ca-trust
-RUN update-ca-trust enabled
+RUN update-ca-trust enable
 RUN update-ca-trust extract
 
 COPY config.json /opt/mattermost/config/config.json
